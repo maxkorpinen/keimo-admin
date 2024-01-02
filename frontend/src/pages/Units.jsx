@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Spinner } from '../components/Spinner';
 import { Link } from 'react-router-dom';
-import { AiOutlineEdit } from 'react-icons/ai';
-import { BsInfoCircle } from 'react-icons/bs';
-import { MdOutlineAddBox } from 'react-icons/md';
+
+import { HiPencilSquare } from "react-icons/hi2";
+import { HiTrash } from "react-icons/hi2";
+import { HiPlusCircle } from "react-icons/hi2";
+import { HiQuestionMarkCircle } from "react-icons/hi2";
 
 
 const Home = () => {
@@ -30,7 +32,7 @@ const Home = () => {
                     All Units
                 </h1>
                 <Link to='/units/create'>
-                    <MdOutlineAddBox className='text-sky-800 text-4xl' />
+                <HiPlusCircle className='text-sky-800 text-4xl' />
                 </Link>
             </div>
             {loading ? (
@@ -41,6 +43,7 @@ const Home = () => {
                         <tr>
                             <th className=''>#</th>
                             <th className=''>Name</th>
+                            <th className=''>Gold Unit</th>
                             <th className=''>Building</th>
                         </tr>
                     </thead>
@@ -54,17 +57,20 @@ const Home = () => {
                                     {unit.name}
                                 </td>
                                 <td className='text-center'>
+                                    {(unit.isGoldUnit) ? 'Yes' : 'No'}
+                                </td>
+                                <td className='text-center'>
                                     {unit.building}
                                 </td>
                                 <td className='text-center'>
                                     <div className='flex justify-center gap-x-4'>
                                         <Link to={`/units/details/${unit._id}`}>
-                                            <BsInfoCircle className='text-2x1 text-green-900' />
+                                        <HiQuestionMarkCircle className='text-2x1 text-green-900' />
                                         </Link>
                                         <Link to={`/units/edit/${unit._id}`}>
-                                            <AiOutlineEdit className='text-2x1 text-blue-900' />
+                                          <HiPencilSquare className='text-2x1 text-blue-900' />
                                         </Link>
-                                        <MdOutlineAddBox className='text-2x1 text-red-900' />
+                                        <HiTrash className='text-2x1 text-red-900' />
                                     </div>
                                 </td>
                             </tr>

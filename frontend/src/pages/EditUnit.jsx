@@ -1,16 +1,31 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import BackButton from '../components/BackButton';
 import { Spinner } from '../components/Spinner';;
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
-const CreateUnit = () => {
+const EditUnit = () => {
   const [name, setName] = useState('');
   const [building, setBuilding] = useState('');
   const [isGoldUnit, setIsGoldUnit] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const handleSaveUnit = () => {
+  const {id} = useParams();
+  useEffect(() => {
+    setLoading(true);
+    axios.get(`http://localhost:5555/units/${id}`)
+    .then((response) => {
+        setName(response.data.name);
+        setBuilding(response.data.building);
+        setIsGoldUnit(response.data.isGoldUnit)
+        setLoading(false)
+    }).catch((error) => {
+        setLoading(false);
+        alert('An error happened. Check Console for details.');
+        console.log(error);
+    });
+  }, [])
+  const handleEditUnit = () => {
     const data = {
       name,
       building,
@@ -18,7 +33,7 @@ const CreateUnit = () => {
     };
     setLoading(true);
     axios
-      .post('http://localhost:5555/units', data)
+      .put(`http://localhost:5555/units/${id}`, data)
       .then(() => {
         setLoading(false);
         navigate('/units');
@@ -35,7 +50,7 @@ const CreateUnit = () => {
   return (
     <div className='p-4'>
       <BackButton destination='/units' />
-      <h1 className='text 3xl my-4'>Create Unit</h1>
+      <h1 className='text 3xl my-4'>Edit Unit</h1>
       {loading ? <Spinner /> : ''}
       <div className='flex flex-col w-[600px] p-4 mx-auto'>
         <div className='my-4'>
@@ -66,7 +81,7 @@ const CreateUnit = () => {
           />
           <label className='text-xl text-gray-500'>This is a gold unit</label>
         </div>
-        <button className='w-full p-2 bg-sky-300 mt-4' onClick={handleSaveUnit}>
+        <button className='w-full p-2 bg-sky-300 mt-4' onClick={handleEditUnit}>
           Save
         </button>
       </div>
@@ -74,4 +89,4 @@ const CreateUnit = () => {
   )
 }
 
-export default CreateUnit
+export default EditUnit
