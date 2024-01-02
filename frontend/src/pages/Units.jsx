@@ -70,7 +70,9 @@ const Home = () => {
                                         <Link to={`/units/edit/${unit._id}`}>
                                           <HiPencilSquare className='text-2x1 text-blue-900' />
                                         </Link>
-                                        <HiTrash className='text-2x1 text-red-900' />
+                                        <Link to={`/units/delete/${unit._id}`}>
+                                            <HiTrash className='text-2x1 text-red-900' />
+                                        </Link>
                                     </div>
                                 </td>
                             </tr>
