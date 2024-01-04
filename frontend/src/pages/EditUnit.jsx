@@ -41,7 +41,8 @@ const EditUnit = () => {
             name,
             building,
             isGoldUnit,
-            counterOf
+            counterOf,
+            counteredBy
         };
         setLoading(true);
         axios
@@ -60,30 +61,52 @@ const EditUnit = () => {
         setIsGoldUnit(!isGoldUnit);
     };
     // something not working here
-    const handleCounterOfChange = (id) => {
-        console.log(id.target.value)
-/* 
-        let id_value = id.target.value
-        console.log(id_value);
+    const handleCounterOfChange = (event) => {
 
-        let currentList = counterOf;
+        const id_value = event.target.value;
 
-        function removeCheck(e) {
-            let array = currentList; // make a separate copy of the array
-            let index = array.indexOf(e)
-            if (index !== -1) {
-              array.splice(index, 1);
-              setCounterOf(array);
-            };
-        };
-
-        function addCheck(e) {
-            let array = counterOf;
-            let newArray = array.concat(e)
-            return newArray
+        if (counterOf.includes(id_value)) {
+            // If the id is already in the array, remove it
+            setCounterOf(counterOf.filter((id) => id !== id_value));
+        } else {
+            // If the id is not in the array, add it
+            setCounterOf([...counterOf, id_value]);
         }
+        /* 
+                let id_value = id.target.value
+                console.log(id_value);
+        
+                let currentList = counterOf;
+        
+                function removeCheck(e) {
+                    let array = currentList; // make a separate copy of the array
+                    let index = array.indexOf(e)
+                    if (index !== -1) {
+                      array.splice(index, 1);
+                      setCounterOf(array);
+                    };
+                };
+        
+                function addCheck(e) {
+                    let array = counterOf;
+                    let newArray = array.concat(e)
+                    return newArray
+                }
+        
+                {counterOf.includes(id_value) ? removeCheck(id_value) : setCounterOf(addCheck(id_value))} */
+    }
 
-        {counterOf.includes(id_value) ? removeCheck(id_value) : setCounterOf(addCheck(id_value))} */
+    const handleCounteredByChange = (event) => {
+
+        const id_value = event.target.value;
+
+        if (counteredBy.includes(id_value)) {
+            // If the id is already in the array, remove it
+            setCounteredBy(counteredBy.filter((id) => id !== id_value));
+        } else {
+            // If the id is not in the array, add it
+            setCounteredBy([...counteredBy, id_value]);
+        }
     }
 
     return (
@@ -121,17 +144,32 @@ const EditUnit = () => {
                     <label className='text-xl text-gray-500'>This is a gold unit</label>
                 </div>
                 <div className='my-4'>
-                    <p className='text-xl mr-4 text-gray-500'>Unit Counters the following units:</p>
-                    {units.map((unit) => 
+                    <p className='text-xl mr-4 text-gray-500'>Unit <b>counters</b> the following units:</p>
+                    {units.map((unit) =>
                         <div key={unit._id}>
-                        <input
-                        type='checkbox'
-                        value={unit._id}
-                        checked={counterOf.includes(unit._id)}
-                        onChange={handleCounterOfChange}
-                        className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2'
-                        />
-                        <label className='text-xl text-gray-500'>{unit.name}</label>
+                            <input
+                                type='checkbox'
+                                value={unit._id}
+                                checked={counterOf.includes(unit._id)}
+                                onChange={handleCounterOfChange}
+                                className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2'
+                            />
+                            <label className='text-xl text-gray-500'>{unit.name}</label>
+                        </div>
+                    )}
+                </div>
+                <div className='my-4'>
+                    <p className='text-xl mr-4 text-gray-500'>Unit is <b>countered by</b> the following units:</p>
+                    {units.map((unit) =>
+                        <div key={unit._id}>
+                            <input
+                                type='checkbox'
+                                value={unit._id}
+                                checked={counteredBy.includes(unit._id)}
+                                onChange={handleCounteredByChange}
+                                className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2'
+                            />
+                            <label className='text-xl text-gray-500'>{unit.name}</label>
                         </div>
                     )}
                 </div>

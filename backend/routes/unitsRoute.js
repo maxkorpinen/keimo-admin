@@ -67,6 +67,25 @@ router.put('/:id', async (request, response) => {
             });
         }
         const {id} = request.params;
+        const counterOf = request.body.counterOf
+        const counteredBy = request.body.counteredBy
+
+        const currentUnit = await Unit.findById(id);
+        if (!currentUnit) {
+            return response.status(404).send({ message: 'Unit not found' });
+        }
+
+        const addedCounterOf = counterOf.filter(x => !currentUnit.counterOf.includes(x));
+        const removedCounterOf = currentUnit.counterOf.filter(x => !counterOf.includes(x));
+
+        const addedCounteredBy = counteredBy.filter(x => !currentUnit.counteredBy.includes(x));
+        const removedCounter = currentUnit.counteredBy.filter(x => !counteredBy.includes(x));
+
+        //console.log(addedCounterOf)
+        //console.log(removedCounterOf)
+        //console.log(addedCounteredBy)
+        //console.log(removedCounter)
+
         const result = await Unit.findByIdAndUpdate(id, request.body)
         if (!result) {
             return response.status(400).json({message: error.message})
