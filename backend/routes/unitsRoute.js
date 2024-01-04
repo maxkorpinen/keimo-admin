@@ -1,5 +1,6 @@
 import express from 'express';
 import { Unit } from '../models/unitModel.js';
+import mongoose from "mongoose";
 
 const router = express.Router();
 
@@ -23,9 +24,9 @@ router.post('/', async (request, response) => {
         }
         const unit = await Unit.create(newUnit);
         return response.status(201).send(unit);
-    } catch(error) {
+    } catch (error) {
         console.log(error.message);
-        response.status(500).send({message: error.message})
+        response.status(500).send({ message: error.message })
     }
 });
 
@@ -37,21 +38,21 @@ router.get('/', async (request, response) => {
             count: units.length,
             data: units
         })
-    } catch(error) {
+    } catch (error) {
         console.log(error.message);
-        response.status(500).send({message: error.message})
+        response.status(500).send({ message: error.message })
     }
 });
 
 // Route for getting a unit by ID
 router.get('/:id', async (request, response) => {
     try {
-        const {id} = request.params;
+        const { id } = request.params;
         const unit = await Unit.findById(id);
         return response.status(200).json(unit)
-    } catch(error) {
+    } catch (error) {
         console.log(error.message);
-        response.status(500).send({message: error.message})
+        response.status(500).send({ message: error.message })
     }
 });
 
@@ -66,7 +67,7 @@ router.put('/:id', async (request, response) => {
                 message: 'Send all required fields: name, building, and isGoldUnit'
             });
         }
-        const {id} = request.params;
+        const { id } = request.params;
         const counterOf = request.body.counterOf
         const counteredBy = request.body.counteredBy
 
@@ -86,29 +87,63 @@ router.put('/:id', async (request, response) => {
         //console.log(addedCounteredBy)
         //console.log(removedCounter)
 
-        const result = await Unit.findByIdAndUpdate(id, request.body)
-        if (!result) {
-            return response.status(400).json({message: error.message})
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        try {
+            // update the current unit
+            const result = await Unit.findByIdAndUpdate(id, request.body, { session })
+            if (!result) {
+                return response.status(400).json({ message: error.message })
+            }
+
+            // Update the counteredBy array of units added to counterOf
+            for (const counterUnitId of addedCounterOf) {
+                await Unit.findByIdAndUpdate(counterUnitId, { $addToSet: { counteredBy: id } }, { session });
+            }
+
+            // Update the counteredBy array of units removed from counterOf
+            for (const counterUnitId of removedCounterOf) {
+                await Unit.findByIdAndUpdate(counterUnitId, { $pull: { counteredBy: id } }, { session });
+            }
+
+            // Update the counterOf array of units added to counteredBy
+            for (const counterUnitId of addedCounteredBy) {
+                await Unit.findByIdAndUpdate(counterUnitId, { $addToSet: { counterOf: id } }, { session });
+            }
+
+            // Update the counterOf array of units removed from counteredBy
+            for (const counterUnitId of removedCounter) {
+                await Unit.findByIdAndUpdate(counterUnitId, { $pull: { counterOf: id } }, { session });
+            }
+
+            await session.commitTransaction();
+            return response.status(200).send({ message: 'Unit updated successfully' });
+        } catch (error) {
+            await session.abortTransaction();
+            console.log(error.message);
+            response.status(500).send({ message: error.message });
+        } finally {
+            session.endSession();
         }
-        return response.status(200).send({message: 'Unit updated successfully'});
-    } catch(error) {
+    } catch (error) {
         console.log(error.message);
-        response.status(500).send({message: error.message});
+        response.status(500).send({ message: error.message });
+
     }
-})
+});
 
 // Route for deleting a Unit
 router.delete('/:id', async (request, response) => {
     try {
-        const {id} = request.params;
+        const { id } = request.params;
         const result = await Unit.findByIdAndDelete(id);
         if (!result) {
-            return response.status(404).json({message: 'Unit not found'})
+            return response.status(404).json({ message: 'Unit not found' })
         }
-        return response.status(200).send({message: 'Unit deleted successfully'})
-    } catch(error) {
+        return response.status(200).send({ message: 'Unit deleted successfully' })
+    } catch (error) {
         console.log(error.message);
-        response.status(500).send({message: error.message});
+        response.status(500).send({ message: error.message });
     }
 });
 
