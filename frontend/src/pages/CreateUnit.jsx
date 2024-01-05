@@ -66,7 +66,7 @@ const CreateUnit = () => {
           />
           <label className='text-xl text-gray-500'>This is a gold unit</label>
         </div>
-        <button className='w-full p-2 bg-sky-300 mt-4' onClick={handleSaveUnit}>
+        <button className='w-full p-2 bg-sky-500 text-white mt-4' onClick={handleSaveUnit}>
           Save
         </button>
       </div>

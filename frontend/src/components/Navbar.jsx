@@ -19,30 +19,31 @@ const Navbar = () => {
     ];
 
     return (
-        <div className='bg-black flex justify-between items-center h-24 full-w mx-auto px-4 text-white'>
+        <div className='bg-slate-800 flex justify-between py-2 px-4 items-center h-auto full-w mx-auto text-white'>
             {/* Logo */}
             <div>
-                <h1 className='w-full text-3xl font-bold text-green-200'>AGE OF KEIMO</h1>
-                <h2 className='w-full text-xl'> Admin Panel</h2>
+                <Link to='/'>
+                    <h1 className='w-full text-3xl hover:text-rose-500 font-bold text-rose-700'>AGE OF KEIMO</h1>
+                    <h2 className='w-full text-xl hover:text-yellow-200 text-yellow-400'> Admin Panel</h2>
+                </Link>
             </div>
 
 
             {/* Desktop Navigation */}
             <ul className='hidden md:flex'>
                 {navItems.map(item => (
-                    <li
-                        key={item.id}
-                        className='p-4 hover:bg-[#00df9a] rounded-xl m-2 cursor-pointer duration-300 hover:text-black'
-                    >
-                        <Link to={item.url}>
+                    <Link to={item.url} key={item.id}>
+                        <li
+                            className='p-5 rounded-md hover:bg-yellow-400 cursor-pointer duration-300 hover:text-slate-950'
+                        >
                             {item.text}
-                        </Link>
-                    </li>
+                        </li>
+                    </Link>
                 ))}
             </ul>
 
             {/* Mobile Navigation Icon */}
-            <div onClick={handleNav} className='block md:hidden'>
+            <div onClick={handleNav} className='cursor-pointer hover:text-yellow-400 block md:hidden'>
                 {nav ? <AiOutlineClose size={20} /> : <AiOutlineMenu size={20} />}
             </div>
 
@@ -50,18 +51,20 @@ const Navbar = () => {
             <ul
                 className={
                     nav
-                        ? 'fixed md:hidden left-0 top-0 w-[60%] h-full border-r border-r-gray-900 bg-[#000300] ease-in-out duration-500'
+                        ? 'fixed md:hidden left-0 top-0 w-[60%] h-full bg-slate-950 ease-in-out duration-500'
                         : 'ease-in-out w-[60%] duration-500 fixed top-0 bottom-0 left-[-100%]'
                 }
             >
                 {/* Mobile Logo */}
-                <h1 className='w-full text-3xl font-bold text-[#00df9a] m-4'>REACT.</h1>
+                <Link to="/">
+                <h1 className='w-full text-3xl hover:text-rose-500 font-bold text-rose-700 m-4'>KEIMO</h1>
+                </Link>
 
                 {/* Mobile Navigation Items */}
                 {navItems.map(item => (
                     <li
                         key={item.id}
-                        className='p-4 border-b rounded-xl hover:bg-[#00df9a] duration-300 hover:text-black cursor-pointer border-gray-600'
+                        className='p-4 hover:bg-yellow-400 duration-300 hover:text-slate-950 cursor-pointer border-gray-600'
                     >
                         <Link to={item.url}>
                             {item.text}

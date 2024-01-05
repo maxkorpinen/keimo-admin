@@ -32,7 +32,7 @@ const Home = () => {
                     All Units
                 </h1>
                 <Link to='/units/create'>
-                <HiPlusCircle className='text-sky-800 text-4xl' />
+                <HiPlusCircle className='text-green-500 text-7xl mx-7' />
                 </Link>
             </div>
             {loading ? (
@@ -65,13 +65,13 @@ const Home = () => {
                                 <td className='text-center'>
                                     <div className='flex justify-center gap-x-4'>
                                         <Link to={`/units/details/${unit._id}`}>
-                                        <HiQuestionMarkCircle className='text-2x1 text-green-900' />
+                                        <HiQuestionMarkCircle className='text-2xl text-sky-500' />
                                         </Link>
                                         <Link to={`/units/edit/${unit._id}`}>
-                                          <HiPencilSquare className='text-2x1 text-blue-900' />
+                                          <HiPencilSquare className='text-2xl text-orange-500' />
                                         </Link>
                                         <Link to={`/units/delete/${unit._id}`}>
-                                            <HiTrash className='text-2x1 text-red-900' />
+                                            <HiTrash className='text-2xl text-red-500' />
                                         </Link>
                                     </div>
                                 </td>

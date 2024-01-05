@@ -173,7 +173,7 @@ const EditUnit = () => {
                         </div>
                     )}
                 </div>
-                <button className='w-full p-2 bg-sky-300 mt-4' onClick={handleEditUnit}>
+                <button className='w-full p-2 bg-sky-500 text-white mt-4' onClick={handleEditUnit}>
                     Save
                 </button>
             </div>
