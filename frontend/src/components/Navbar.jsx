@@ -19,11 +19,11 @@ const Navbar = () => {
     ];
 
     return (
-        <div className='bg-slate-800 flex justify-between py-2 px-4 items-center h-auto full-w mx-auto text-white'>
+        <div className='bg-slate-700 flex justify-between py-2 px-4 items-center h-auto full-w mx-auto text-white'>
             {/* Logo */}
             <div>
                 <Link to='/'>
-                    <h1 className='w-full text-3xl hover:text-rose-500 font-bold text-rose-700'>AGE OF KEIMO</h1>
+                    <h1 className='w-full text-3xl hover:text-rose-500 font-bold text-rose-600'>AGE OF KEIMO</h1>
                     <h2 className='w-full text-xl hover:text-yellow-200 text-yellow-400'> Admin Panel</h2>
                 </Link>
             </div>

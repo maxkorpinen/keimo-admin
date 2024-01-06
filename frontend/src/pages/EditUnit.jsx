@@ -144,7 +144,7 @@ const EditUnit = () => {
                     <label className='text-xl text-gray-500'>This is a gold unit</label>
                 </div>
                 <div className='my-4'>
-                    <p className='text-xl mr-4 text-gray-500'>Unit <b>counters</b> the following units:</p>
+                    <p className='text-xl mr-4 text-gray-500'>Unit is <b>strong against</b> the following units:</p>
                     {units.map((unit) =>
                         <div key={unit._id}>
                             <input
@@ -159,7 +159,7 @@ const EditUnit = () => {
                     )}
                 </div>
                 <div className='my-4'>
-                    <p className='text-xl mr-4 text-gray-500'>Unit is <b>countered by</b> the following units:</p>
+                    <p className='text-xl mr-4 text-gray-500'>Unit is <b>weak against</b> the following units:</p>
                     {units.map((unit) =>
                         <div key={unit._id}>
                             <input
