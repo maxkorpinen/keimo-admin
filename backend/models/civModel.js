@@ -5,11 +5,24 @@ const civSchema = mongoose.Schema(
         name: {
             type: String,
             required: true
-        }
+        },
+        description: {
+            type: String,
+            required: false
+        },
+        units: [
+            {
+                unit: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: 'Unit'
+                },
+                powerModifier: Number,
+            }
+        ]
     },
     {
         timestamps: true,
     }
 );
 
-export const Unit = mongoose.model('Unit', unitSchema);
+export const Civ = mongoose.model('Civ', civSchema);

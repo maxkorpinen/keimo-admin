@@ -2,6 +2,7 @@ import express from "express";
 import { PORT, mongoDBURL } from "./config.js";
 import mongoose from "mongoose";
 import unitsRoute from './routes/unitsRoute.js';
+import civsRoute from './routes/civsRoute.js';
 import cors from 'cors';
 
 const app = express();
@@ -26,7 +27,8 @@ app.get('/', (request, response) => {
     return response.status(234).send('We are live')
 });
 
-app.use('/units', unitsRoute)
+app.use('/units', unitsRoute);
+app.use('/civs', civsRoute);
 
 mongoose
     .connect(mongoDBURL)
