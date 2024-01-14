@@ -32,6 +32,7 @@ const EditCiv = () => {
         console.log(error);
       });
   }, []);
+  console.log(civUnits)
   const handleEditCiv = () => {
     const data = {
       name,

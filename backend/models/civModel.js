@@ -17,6 +17,7 @@ const civSchema = mongoose.Schema(
                     ref: 'Unit'
                 },
                 powerModifier: Number,
+                _id: false
             }
         ]
     },
