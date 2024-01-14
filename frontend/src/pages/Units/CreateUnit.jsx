@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import BackButton from '../../components/BackButton';
 import { Spinner } from '../../components/Spinner';;
 import axios from 'axios';
@@ -49,12 +49,16 @@ const CreateUnit = () => {
         </div>
         <div className='my-4'>
           <label className='text-xl mr-4 text-gray-500'>Building</label>
-          <input
-            type='text'
+          <select
             value={building}
             onChange={(e) => setBuilding(e.target.value)}
             className='border-2 border-gray-500 px-4 py-2 w-full'
-          />
+          >
+            <option value=""></option>
+            <option value="Barracks">Barracks</option>
+            <option value="Archery Range">Archery Range</option>
+            <option value="Stable">Stable</option>
+          </select>
         </div>
         <div className='my-4'>
           <input

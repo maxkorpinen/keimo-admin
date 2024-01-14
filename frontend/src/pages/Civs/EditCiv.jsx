@@ -69,11 +69,11 @@ const EditCiv = () => {
 
   const handlePowerModifierChange = (unitId, modifierValue) => {
     setCivUnits(civUnits.map(unit => {
-        if (unit.unit === unitId) {
-            return { ...unit, powerModifier: modifierValue };
-        }
-        // console.log(`Modifier changed for Unit ID: ${unitId}, New Value: ${modifierValue}`);
-        return unit;
+      if (unit.unit === unitId) {
+        return { ...unit, powerModifier: modifierValue };
+      }
+      // console.log(`Modifier changed for Unit ID: ${unitId}, New Value: ${modifierValue}`);
+      return unit;
     }));
   };
 
@@ -106,14 +106,14 @@ const EditCiv = () => {
           {allUnits.map((unit) => (
             <div key={unit._id} className='flex justify-between'>
               <div>
-              <input
-                type="checkbox"
-                value={unit._id}
-                checked={civUnits.some(u => u.unit === unit._id)}
-                onChange={handleAvailableUnitsChange}
-                className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2'
-              />
-              <label className='text-xl text-gray-500'>{unit.name}</label>
+                <input
+                  type="checkbox"
+                  value={unit._id}
+                  checked={civUnits.some(u => u.unit === unit._id)}
+                  onChange={handleAvailableUnitsChange}
+                  className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2'
+                />
+                <label className='text-xl text-gray-500'>{unit.name}</label>
               </div>
               <select
                 value={civUnits.find(u => u.unit === unit._id)?.powerModifier || ''}
