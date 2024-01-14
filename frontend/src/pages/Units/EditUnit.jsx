@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import BackButton from '../components/BackButton';
-import { Spinner } from '../components/Spinner';;
+import BackButton from '../../components/BackButton';
+import { Spinner } from '../../components/Spinner';;
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -72,28 +72,6 @@ const EditUnit = () => {
             // If the id is not in the array, add it
             setCounterOf([...counterOf, id_value]);
         }
-        /* 
-                let id_value = id.target.value
-                console.log(id_value);
-        
-                let currentList = counterOf;
-        
-                function removeCheck(e) {
-                    let array = currentList; // make a separate copy of the array
-                    let index = array.indexOf(e)
-                    if (index !== -1) {
-                      array.splice(index, 1);
-                      setCounterOf(array);
-                    };
-                };
-        
-                function addCheck(e) {
-                    let array = counterOf;
-                    let newArray = array.concat(e)
-                    return newArray
-                }
-        
-                {counterOf.includes(id_value) ? removeCheck(id_value) : setCounterOf(addCheck(id_value))} */
     }
 
     const handleCounteredByChange = (event) => {
@@ -126,12 +104,21 @@ const EditUnit = () => {
                 </div>
                 <div className='my-4'>
                     <label className='text-xl mr-4 text-gray-500'>Building</label>
-                    <input
+{/*                     <input
                         type='text'
+                        value={building}
+                        onChange={}
+                        className='border-2 border-gray-500 px-4 py-2 w-full'
+                    /> */}
+                    <select
                         value={building}
                         onChange={(e) => setBuilding(e.target.value)}
                         className='border-2 border-gray-500 px-4 py-2 w-full'
-                    />
+                    >
+                        <option value="Barracks">Barracks</option>
+                        <option value="Archery Range">Archery Range</option>
+                        <option value="Stable">Stable</option>
+                    </select>
                 </div>
                 <div className='my-4'>
                     <input

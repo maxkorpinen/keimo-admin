@@ -17,7 +17,8 @@ router.post('/', async (request, response) => {
         }
         const newCiv = {
             name: request.body.name,
-            units: request.body.units
+            units: request.body.units,
+            description: request.body.description
         }
         const civ = await Civ.create(newCiv);
         return response.status(201).send(civ);

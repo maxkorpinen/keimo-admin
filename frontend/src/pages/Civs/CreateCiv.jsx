@@ -1,27 +1,27 @@
 import React, {useState} from 'react'
-import BackButton from '../components/BackButton';
-import { Spinner } from '../components/Spinner';;
+import BackButton from '../../components/BackButton';
+import { Spinner } from '../../components/Spinner';;
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const CreateUnit = () => {
+const CreateCiv = () => {
   const [name, setName] = useState('');
-  const [building, setBuilding] = useState('');
-  const [isGoldUnit, setIsGoldUnit] = useState(false);
+  const [description, setDescription] = useState('');
+  const [units, setUnits] = useState([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const handleSaveUnit = () => {
+  const handleSaveCiv = () => {
     const data = {
       name,
-      building,
-      isGoldUnit
+      description,
+      units
     };
     setLoading(true);
     axios
-      .post('http://localhost:5555/units', data)
+      .post('http://localhost:5555/civs', data)
       .then(() => {
         setLoading(false);
-        navigate('/units');
+        navigate('/civs');
       })
       .catch((error) => {
         setLoading(false);
@@ -29,13 +29,13 @@ const CreateUnit = () => {
         console.log(error);
       })
   };
-  const handlecCheckBoxChange = () => {
+/*   const handlecCheckBoxChange = () => {
     setIsGoldUnit(!isGoldUnit);
-  };
+  }; */
   return (
     <div className='p-4'>
-      <BackButton destination='/units' />
-      <h1 className='text 3xl my-4'>Create Unit</h1>
+      <BackButton destination='/civs' />
+      <h1 className='text 3xl my-4'>Create Civ</h1>
       {loading ? <Spinner /> : ''}
       <div className='flex flex-col w-[600px] p-4 mx-auto'>
         <div className='my-4'>
@@ -48,15 +48,15 @@ const CreateUnit = () => {
           />
         </div>
         <div className='my-4'>
-          <label className='text-xl mr-4 text-gray-500'>Building</label>
+          <label className='text-xl mr-4 text-gray-500'>Description</label>
           <input
             type='text'
-            value={building}
-            onChange={(e) => setBuilding(e.target.value)}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
             className='border-2 border-gray-500 px-4 py-2 w-full'
           />
         </div>
-        <div className='my-4'>
+{/*         <div className='my-4'>
           <input
             type='checkbox'
             value={'Gold Unit'}
@@ -65,8 +65,8 @@ const CreateUnit = () => {
             className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2'
           />
           <label className='text-xl text-gray-500'>This is a gold unit</label>
-        </div>
-        <button className='w-full p-2 bg-sky-500 text-white mt-4' onClick={handleSaveUnit}>
+        </div> */}
+        <button className='w-full p-2 bg-sky-500 text-white mt-4' onClick={handleSaveCiv}>
           Save
         </button>
       </div>
@@ -74,4 +74,4 @@ const CreateUnit = () => {
   )
 }
 
-export default CreateUnit
+export default CreateCiv
