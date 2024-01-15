@@ -2,6 +2,19 @@ import express from 'express';
 import { Civ } from '../models/civModel.js';
 import mongoose from "mongoose";
 
+import multer from 'multer';
+const upload = multer({
+    limits: {
+        fileSize: 2500000 // Limiting the file size to 2.5MB
+    },
+    fileFilter(req, file, cb) {
+        if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+            return cb(new Error('Please upload an image file (jpg, jpeg, png).'));
+        }
+        cb(undefined, true);
+    }
+});
+
 const router = express.Router();
 
 // Route for saving a new Civ
@@ -55,7 +68,7 @@ router.get('/:id', async (request, response) => {
 });
 
 // Route for updating a Civ
-router.put('/:id', async (request, response) => {
+router.put('/:id', upload.single('image'), async (request, response) => {
     try {
         if (
             !request.body.name ||
@@ -66,11 +79,26 @@ router.put('/:id', async (request, response) => {
             });
         }
         const { id } = request.params;
-        const result = await Civ.findByIdAndUpdate(id, request.body);
+        const civ = await Civ.findById(id);
+        if (!civ) {
+            return response.status(400).json({ message: error.message })
+        }
+
+        civ.name = request.body.name || civ.name;
+        civ.description = request.body.description || civ.description;
+
+        if (request.file) {
+            civ.image = request.file.buffer;
+        }
+
+        await civ.save();
+        response.status(200).send({ message: 'Civ updated successfully' })
+
+        /* const result = await Civ.findByIdAndUpdate(id, request.body);
         if (!result) {
             return response.status(400).json({ message: error.message })
         }
-        return response.status(200).send({ message: 'Civ updated successfully' })
+        return response.status(200).send({ message: 'Civ updated successfully' }) */
     } catch (error) {
         console.log(error.message);
         response.status(500).send({ message: error.message });

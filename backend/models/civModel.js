@@ -10,6 +10,10 @@ const civSchema = mongoose.Schema(
             type: String,
             required: false
         },
+        image: {
+            type: Buffer,
+            required: false
+        },
         units: [
             {
                 unit: {
