@@ -15,7 +15,11 @@ const unitSchema = mongoose.Schema(
             required: true
         },
         counterOf: [],
-        counteredBy: []
+        counteredBy: [],
+        image: { 
+            type: Buffer, 
+            required: false 
+        }
     },
     {
         timestamps: true,

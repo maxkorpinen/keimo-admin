@@ -1,13 +1,12 @@
 import express from 'express';
 import { Civ } from '../models/civModel.js';
 import mongoose from "mongoose";
-
 import multer from 'multer';
-const upload = multer({
-    limits: {
-        fileSize: 2500000 // Limiting the file size to 2.5MB
-    },
-    fileFilter(req, file, cb) {
+
+const upload = multer({ 
+    limits: { fileSize: 2500000 }, // Limit file size 2.5MB
+    fileFilter(request, file, cb) {
+        //console.log(request.file)
         if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
             return cb(new Error('Please upload an image file (jpg, jpeg, png).'));
         }
@@ -44,14 +43,14 @@ router.post('/', async (request, response) => {
 // Route for getting all civs
 router.get('/', async (request, response) => {
     try {
-        const civs = await Civ.find({});
+        const civs = await Civ.find({}).select('-image'); // Excludes the image field
         return response.status(200).json({
             count: civs.length,
             data: civs
-        })
+        });
     } catch (error) {
         console.log(error.message);
-        response.status(500).send({ message: error.message })
+        response.status(500).send({ message: error.message });
     }
 });
 
@@ -67,8 +66,24 @@ router.get('/:id', async (request, response) => {
     }
 });
 
+// Route for getting Civ image by ID
+router.get('/:id/image', async (request, response) => {
+    try {
+        const civ = await Civ.findById(request.params.id);
+        if (!civ || !civ.image) {
+            throw new Error('Image not found');
+        }
+        console.log(civ.image)
+        response.set('Content-Type', 'image/jpeg');
+        response.send(civ.image);
+    } catch (error) {
+        console.log(error.message);
+        response.status(404).send({ message: error.message });
+    }
+});
+
 // Route for updating a Civ
-router.put('/:id', upload.single('image'), async (request, response) => {
+router.put('/:id', async (request, response) => {
     try {
         if (
             !request.body.name ||
@@ -79,26 +94,28 @@ router.put('/:id', upload.single('image'), async (request, response) => {
             });
         }
         const { id } = request.params;
-        const civ = await Civ.findById(id);
-        if (!civ) {
-            return response.status(400).json({ message: error.message })
-        }
-
-        civ.name = request.body.name || civ.name;
-        civ.description = request.body.description || civ.description;
-
-        if (request.file) {
-            civ.image = request.file.buffer;
-        }
-
-        await civ.save();
-        response.status(200).send({ message: 'Civ updated successfully' })
-
-        /* const result = await Civ.findByIdAndUpdate(id, request.body);
+        const result = await Civ.findByIdAndUpdate(id, request.body);
         if (!result) {
             return response.status(400).json({ message: error.message })
         }
-        return response.status(200).send({ message: 'Civ updated successfully' }) */
+        return response.status(200).send({ message: 'Civ updated successfully' })
+    } catch (error) {
+        console.log(error.message);
+        response.status(500).send({ message: error.message });
+    }
+});
+
+// Endpoint for updating civ image
+router.put('/:id/image', upload.single('image'), async (request, response) => {
+    try {
+        const civ = await Civ.findById(request.params.id);
+        if (!civ) {
+            return response.status(404).send({ message: 'Civ not found' });
+        }
+        civ.image = request.file.buffer;
+        //console.log(civ.image)
+        await civ.save();
+        response.send({ message: 'Civ image uploaded successfully' });
     } catch (error) {
         console.log(error.message);
         response.status(500).send({ message: error.message });

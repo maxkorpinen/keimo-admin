@@ -9,6 +9,10 @@ const EditCiv = () => {
   const [civUnits, setCivUnits] = useState([])
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  const [image, setImage] = useState(null);
+  const [imageUrl, setImageUrl] = useState(null);
+  const [uploadStatus, setUploadStatus] = useState('');
+  const [imageUploadCompleted, setImageUploadCompleted] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams();
@@ -25,14 +29,22 @@ const EditCiv = () => {
         setName(response[1].data.name);
         setDescription(response[1].data.description);
         setCivUnits(response[1].data.units)
+        setImageUrl(`http://localhost:5555/civs/${id}/image`);
         setLoading(false)
       }).catch((error) => {
         setLoading(false);
         alert('An error happened. Check Console for details.');
         console.log(error);
       });
-  }, []);
-  console.log(civUnits)
+  }, [id]);
+
+  useEffect(() => {
+    if (imageUploadCompleted && image) {
+      setImageUrl(`http://localhost:5555/civs/${id}/image?t=${new Date().getTime()}`);
+      setImageUploadCompleted(false); // Reset the flag
+    }
+  }, [id, imageUploadCompleted, image]);
+
   const handleEditCiv = () => {
     const data = {
       name,
@@ -52,6 +64,50 @@ const EditCiv = () => {
         console.log(error);
       })
   };
+
+  const uploadImage = async (uploadedImage) => { // Pass the image directly
+    try {
+        setLoading(true)
+        const formData = new FormData();
+        formData.append('image', uploadedImage);
+
+        const response = await axios.put(`http://localhost:5555/civs/${id}/image`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+
+        console.log(response.data.message);
+        setUploadStatus('Image uploaded successfully');
+        setImageUploadCompleted(true); // Set flag only if upload is successful
+    } catch (error) {
+        console.error('Error uploading image:', error.response ? error.response.data.message : error.message);
+        setUploadStatus('Failed to upload image');
+    }
+    setLoading(false)
+};
+
+  /* const uploadImage = async () => {
+    try {
+      const formData = new FormData();
+      formData.append('image', image);
+
+      const response = await axios.put(`http://localhost:5555/civs/${id}/image`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+
+      console.log(response.data.message);
+      setUploadStatus('Image uploaded successfully');
+      setImageUrl(`http://localhost:5555/civs/${id}/image?t=${new Date().getTime()}`);
+    } catch (error) {
+      console.error('Error uploading image:', error.response ? error.response.data.message : error.message);
+      setUploadStatus('Failed to upload image');
+    }
+    setUploadStatus('Image uploaded successfully');
+    setImageUploadCompleted(true); // Set the flag indicating upload is complete
+  }; */
 
   const handleAvailableUnitsChange = (event) => {
     const id_value = event.target.value;
@@ -78,6 +134,14 @@ const EditCiv = () => {
     }));
   };
 
+  const handleImageChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+        const selectedImage = e.target.files[0];
+        setImage(selectedImage); // Set the image state
+        uploadImage(selectedImage); // Call uploadImage with the selected image
+    }
+};
+
   return (
     <div className='p-4'>
       <BackButton destination='/civs' />
@@ -99,6 +163,18 @@ const EditCiv = () => {
             type='text'
             value={description}
             onChange={(e) => setDescription(e.target.value)}
+            className='border-2 border-gray-500 px-4 py-2 w-full'
+          />
+        </div>
+        <div>
+          {/* ... other component elements ... */}
+          {imageUrl && <img src={imageUrl} alt="Civ" />}
+        </div>
+        <div className='my-4'>
+          <label className='text-xl mr-4 text-gray-500'>Civ Image</label>
+          <input
+            type="file"
+            onChange={handleImageChange}
             className='border-2 border-gray-500 px-4 py-2 w-full'
           />
         </div>

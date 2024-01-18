@@ -1,8 +1,20 @@
 import express from 'express';
 import { Unit } from '../models/unitModel.js';
 import mongoose from "mongoose";
+import multer from 'multer';
 
 const router = express.Router();
+
+const upload = multer({ 
+    limits: { fileSize: 2500000 }, // Limit file size 2.5MB
+    fileFilter(request, file, cb) {
+        //console.log(request.file)
+        if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+            return cb(new Error('Please upload an image file (jpg, jpeg, png).'));
+        }
+        cb(undefined, true);
+    }
+});
 
 // Route for saving a new Unit
 router.post('/', async (request, response) => {
@@ -53,6 +65,22 @@ router.get('/:id', async (request, response) => {
     } catch (error) {
         console.log(error.message);
         response.status(500).send({ message: error.message })
+    }
+});
+
+// Route for getting Civ image by ID
+router.get('/:id/image', async (request, response) => {
+    try {
+        const unit = await Unit.findById(request.params.id);
+        if (!unit || !unit.image) {
+            throw new Error('Image not found');
+        }
+        console.log(unit.image)
+        response.set('Content-Type', 'image/jpeg');
+        response.send(unit.image);
+    } catch (error) {
+        console.log(error.message);
+        response.status(404).send({ message: error.message });
     }
 });
 
@@ -129,6 +157,23 @@ router.put('/:id', async (request, response) => {
         console.log(error.message);
         response.status(500).send({ message: error.message });
 
+    }
+});
+
+// Route for unit image upload
+router.put('/:id/image', upload.single('image'), async (request, response) => {
+    try {
+        const unit = await Unit.findById(request.params.id);
+        if (!unit) {
+            return response.status(404).send({ message: 'Unit not found' });
+        }
+        unit.image = request.file.buffer;
+        //console.log(unit.image)
+        await unit.save();
+        response.send({ message: 'Unit image uploaded successfully' });
+    } catch (error) {
+        console.log(error.message);
+        response.status(500).send({ message: error.message });
     }
 });
 
