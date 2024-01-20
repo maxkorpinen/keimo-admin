@@ -1,6 +1,10 @@
 import React from 'react'
 import { Routes, Route } from 'react-router-dom'
+import { AuthProvider } from './contexts/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
+
 import Home from './pages/Home'
+import Login from './pages/Login';
 import Civs from './pages/Civs/Civs'
 import Units from './pages/Units/Units'
 import CreateCiv from './pages/Civs/CreateCiv'
@@ -15,23 +19,24 @@ import DeleteCiv from './pages/Civs/DeleteCiv';
 
 function App() {
   return (
-    <div>
+    <AuthProvider>
       <Navbar />
       <Routes>
-        <Route path='/' element={<Home/>} />
-        <Route path='/civs' element={<Civs/>} />
-        <Route path='/units' element={<Units/>} />
-        <Route path='/civs/create' element={<CreateCiv/>} />
-        <Route path='/units/create' element={<CreateUnit/>} />
-        <Route path='/civs/details/:id' element={<ShowCiv/>} />
-        <Route path='/units/details/:id' element={<ShowUnit/>} />
-        <Route path='/civs/edit/:id' element={<EditCiv/>} />
-        <Route path='/units/edit/:id' element={<EditUnit/>} />
-        <Route path='/units/delete/:id' element={<DeleteUnit/>} />
-        <Route path='/civs/delete/:id' element={<DeleteCiv/>} />
+        <Route path='/login' element={<Login />} />
+        <Route path='/' element={<ProtectedRoute><Home/></ProtectedRoute>} />
+        <Route path='/civs' element={<ProtectedRoute><Civs/></ProtectedRoute>} />
+        <Route path='/units' element={<ProtectedRoute><Units/></ProtectedRoute>} />
+        <Route path='/civs/create' element={<ProtectedRoute><CreateCiv/></ProtectedRoute>} />
+        <Route path='/units/create' element={<ProtectedRoute><CreateUnit/></ProtectedRoute>} />
+        <Route path='/civs/details/:id' element={<ProtectedRoute><ShowCiv/></ProtectedRoute>} />
+        <Route path='/units/details/:id' element={<ProtectedRoute><ShowUnit/></ProtectedRoute>} />
+        <Route path='/civs/edit/:id' element={<ProtectedRoute><EditCiv/></ProtectedRoute>} />
+        <Route path='/units/edit/:id' element={<ProtectedRoute><EditUnit/></ProtectedRoute>} />
+        <Route path='/units/delete/:id' element={<ProtectedRoute><DeleteUnit/></ProtectedRoute>} />
+        <Route path='/civs/delete/:id' element={<ProtectedRoute><DeleteCiv/></ProtectedRoute>} />
       </Routes>
 
-    </div>
+    </AuthProvider>
   )
 }
 
