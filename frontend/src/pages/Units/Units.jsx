@@ -15,7 +15,9 @@ const Units = () => {
     useEffect(() => {
         setLoading(true);
         axios
-            .get('http://localhost:5555/units')
+            .get('http://localhost:5555/units', {
+                withCredentials: true
+            })
             .then((response) => {
                 setUnits(response.data.data);
                 setLoading(false);

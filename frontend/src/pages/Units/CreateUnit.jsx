@@ -18,7 +18,9 @@ const CreateUnit = () => {
     };
     setLoading(true);
     axios
-      .post('http://localhost:5555/units', data)
+      .post('http://localhost:5555/units', data, {
+        withCredentials: true
+    })
       .then(() => {
         setLoading(false);
         navigate('/units');
