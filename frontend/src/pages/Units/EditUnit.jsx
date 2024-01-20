@@ -19,8 +19,12 @@ const EditUnit = () => {
         setLoading(true);
         let unitUrl = 'http://localhost:5555/units';
         let unitByIdUrl = `http://localhost:5555/units/${id}`;
-        const promise1 = axios.get(unitUrl);
-        const promise2 = axios.get(unitByIdUrl);
+        const promise1 = axios.get(unitUrl, {
+            withCredentials: true
+        });
+        const promise2 = axios.get(unitByIdUrl, {
+            withCredentials: true
+        });
         Promise.all([promise1, promise2])
             .then((response) => {
                 setUnits(response[0].data.data)
@@ -46,7 +50,9 @@ const EditUnit = () => {
         };
         setLoading(true);
         axios
-            .put(`http://localhost:5555/units/${id}`, data)
+            .put(`http://localhost:5555/units/${id}`, data, {
+                withCredentials: true
+            })
             .then(() => {
                 setLoading(false);
                 navigate('/units');

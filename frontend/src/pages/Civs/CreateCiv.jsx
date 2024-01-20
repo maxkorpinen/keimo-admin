@@ -18,7 +18,9 @@ const CreateCiv = () => {
     };
     setLoading(true);
     axios
-      .post('http://localhost:5555/civs', data)
+      .post('http://localhost:5555/civs', data, {
+        withCredentials: true
+    })
       .then(() => {
         setLoading(false);
         navigate('/civs');

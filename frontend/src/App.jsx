@@ -1,5 +1,5 @@
 import React from 'react'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -35,7 +35,6 @@ function App() {
         <Route path='/units/delete/:id' element={<ProtectedRoute><DeleteUnit/></ProtectedRoute>} />
         <Route path='/civs/delete/:id' element={<ProtectedRoute><DeleteCiv/></ProtectedRoute>} />
       </Routes>
-
     </AuthProvider>
   )
 }

@@ -11,7 +11,9 @@ const DeleteCiv = () => {
     const handleDeleteCiv = () => {
         setLoading(true);
         axios
-            .delete(`http://localhost:5555/civs/${id}`)
+            .delete(`http://localhost:5555/civs/${id}`, {
+                withCredentials: true
+            })
             .then(() => {
                 setLoading(false);
                 navigate('/civs')

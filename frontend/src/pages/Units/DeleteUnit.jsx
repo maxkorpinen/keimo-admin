@@ -11,7 +11,9 @@ const DeleteUnit = () => {
     const handleDeleteUnit = () => {
         setLoading(true);
         axios
-            .delete(`http://localhost:5555/units/${id}`)
+            .delete(`http://localhost:5555/units/${id}`, {
+                withCredentials: true
+            })
             .then(() => {
                 setLoading(false);
                 navigate('/units')

@@ -2,20 +2,20 @@ import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../config.js';
 
 const verifyToken = (req, res, next) => {
-    const authHeader = req.headers.authorization;
+    const token = req.cookies.token; // Extract the token from cookies
+    //console.log(token)
 
-    if (authHeader) {
-        const token = authHeader.split(' ')[1]; // Bearer TOKEN
+    if (!token) {
+        return res.status(401).send('Access Denied: No Token Provided!');
+    }
 
-        jwt.verify(token, JWT_SECRET, (err, user) => {
-            if (err) {
-                return res.status(403).send('Token is not valid');
-            }
-            req.user = user;
-            next();
-        });
-    } else {
-        return res.status(401).send('Authentication token is missing');
+    try {
+        const verified = jwt.verify(token, JWT_SECRET);
+        console.log(verified)
+        req.user = verified; // Or whatever user payload you have in the token
+        next();
+    } catch (error) {
+        res.status(403).send('Invalid Token');
     }
 };
 

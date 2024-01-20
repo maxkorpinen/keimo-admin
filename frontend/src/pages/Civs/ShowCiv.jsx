@@ -12,7 +12,9 @@ const ShowCiv = () => {
     useEffect(() => {
         setLoading(true);
         axios
-            .get(`http://localhost:5555/civs/${id}`)
+            .get(`http://localhost:5555/civs/${id}`, {
+                withCredentials: true
+            })
             .then((response) => {
                 setCiv(response.data);
                 setLoading(false)

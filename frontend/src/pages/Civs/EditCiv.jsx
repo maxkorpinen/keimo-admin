@@ -21,8 +21,12 @@ const EditCiv = () => {
     setLoading(true);
     let unitUrl = 'http://localhost:5555/units';
     let civById = `http://localhost:5555/civs/${id}`;
-    const promise1 = axios.get(unitUrl);
-    const promise2 = axios.get(civById);
+    const promise1 = axios.get(unitUrl, {
+      withCredentials: true
+  });
+    const promise2 = axios.get(civById, {
+      withCredentials: true
+  });
     Promise.all([promise1, promise2])
       .then((response) => {
         setAllUnits(response[0].data.data)
@@ -53,7 +57,9 @@ const EditCiv = () => {
     };
     setLoading(true);
     axios
-      .put(`http://localhost:5555/civs/${id}`, data)
+      .put(`http://localhost:5555/civs/${id}`, data, {
+        withCredentials: true
+    })
       .then(() => {
         setLoading(false);
         navigate('/civs');
@@ -71,7 +77,9 @@ const EditCiv = () => {
         const formData = new FormData();
         formData.append('image', uploadedImage);
 
-        const response = await axios.put(`http://localhost:5555/civs/${id}/image`, formData, {
+        const response = await axios.put(`http://localhost:5555/civs/${id}/image`, formData,{
+          withCredentials: true
+      },{
             headers: {
                 'Content-Type': 'multipart/form-data'
             }

@@ -12,14 +12,18 @@ const Login = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post('http://localhost:5555/auth/login', { email, password });
-            const token = response.data.token;
-            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-            login(response.data.token); // Make sure this line is executed
-
-            navigate('/');
+            const response = await axios.post('http://localhost:5555/auth/login', { email, password }, { withCredentials: true });
+    
+            if (response.status === 200) {
+                login(); // Update the login state
+                navigate('/'); // Redirect to the home page or another protected route
+            } else {
+                // Handle unsuccessful login
+            }
+            // console.log(response)
         } catch (error) {
-            // Error handling
+            console.error("Login failed:", error.response ? error.response.data : error);
+            // Handle login failure
         }
     };
 

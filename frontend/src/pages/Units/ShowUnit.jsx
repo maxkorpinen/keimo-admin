@@ -12,7 +12,9 @@ const ShowUnit = () => {
     useEffect(() => {
         setLoading(true);
         axios
-            .get(`http://localhost:5555/units/${id}`)
+            .get(`http://localhost:5555/units/${id}`, {
+                withCredentials: true
+            })
             .then((response) => {
                 setUnit(response.data);
                 setLoading(false)

@@ -5,20 +5,19 @@ const AuthContext = createContext(null);
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-    const [authToken, setAuthToken] = useState(null);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    const login = (token) => {
-        setAuthToken(token);
-        // Optionally, store the token in sessionStorage/localStorage
+    const login = () => {
+        setIsLoggedIn(true);
     };
 
     const logout = () => {
-        setAuthToken(null);
-        // Remove the token from sessionStorage/localStorage if used
+        setIsLoggedIn(false);
+        // Call the server to clear the HttpOnly cookie
     };
 
     return (
-        <AuthContext.Provider value={{ authToken, login, logout }}>
+        <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
             {children}
         </AuthContext.Provider>
     );

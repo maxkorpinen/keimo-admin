@@ -23,10 +23,22 @@ router.post('/login', async (req, res) => {
 
         const token = jwt.sign({ adminId: admin._id }, JWT_SECRET, { expiresIn: '1h' });
 
-        res.json({ token });
+        res.cookie('token', token, {
+            httpOnly: true,
+            sameSite: 'lax', // or 'strict' depending on your needs
+            domain: 'localhost',
+            path: '/'
+        });
+
+        res.status(200).send('Login successful');
     } catch (error) {
         res.status(500).send('Internal server error');
     }
+});
+
+router.post('/logout', (req, res) => {
+    res.clearCookie('token');
+    res.status(200).send('Logged out successfully');
 });
 
 export default router;
