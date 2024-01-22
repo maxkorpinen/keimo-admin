@@ -4,6 +4,8 @@ import { Spinner } from '../../components/Spinner';;
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 
+const apiBaseUrl = import.meta.env.VITE_API_URL;
+
 const EditCiv = () => {
   const [allUnits, setAllUnits] = useState([])
   const [civUnits, setCivUnits] = useState([])
@@ -19,8 +21,8 @@ const EditCiv = () => {
 
   useEffect(() => {
     setLoading(true);
-    let unitUrl = 'http://localhost:5555/units';
-    let civById = `http://localhost:5555/civs/${id}`;
+    let unitUrl = `${apiBaseUrl}/units`;
+    let civById = `${apiBaseUrl}/civs/${id}`;
     const promise1 = axios.get(unitUrl, {
       withCredentials: true
   });
@@ -33,7 +35,7 @@ const EditCiv = () => {
         setName(response[1].data.name);
         setDescription(response[1].data.description);
         setCivUnits(response[1].data.units)
-        setImageUrl(`http://localhost:5555/civs/${id}/image`);
+        setImageUrl(`${apiBaseUrl}/civs/${id}/image`);
         setLoading(false)
       }).catch((error) => {
         setLoading(false);
@@ -44,7 +46,7 @@ const EditCiv = () => {
 
   useEffect(() => {
     if (imageUploadCompleted && image) {
-      setImageUrl(`http://localhost:5555/civs/${id}/image?t=${new Date().getTime()}`);
+      setImageUrl(`${apiBaseUrl}/civs/${id}/image?t=${new Date().getTime()}`);
       setImageUploadCompleted(false); // Reset the flag
     }
   }, [id, imageUploadCompleted, image]);
@@ -57,7 +59,7 @@ const EditCiv = () => {
     };
     setLoading(true);
     axios
-      .put(`http://localhost:5555/civs/${id}`, data, {
+      .put(`${apiBaseUrl}/civs/${id}`, data, {
         withCredentials: true
     })
       .then(() => {
@@ -77,7 +79,7 @@ const EditCiv = () => {
         const formData = new FormData();
         formData.append('image', uploadedImage);
 
-        const response = await axios.put(`http://localhost:5555/civs/${id}/image`, formData,{
+        const response = await axios.put(`${apiBaseUrl}/civs/${id}/image`, formData,{
           withCredentials: true
       },{
             headers: {
@@ -94,28 +96,6 @@ const EditCiv = () => {
     }
     setLoading(false)
 };
-
-  /* const uploadImage = async () => {
-    try {
-      const formData = new FormData();
-      formData.append('image', image);
-
-      const response = await axios.put(`http://localhost:5555/civs/${id}/image`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-
-      console.log(response.data.message);
-      setUploadStatus('Image uploaded successfully');
-      setImageUrl(`http://localhost:5555/civs/${id}/image?t=${new Date().getTime()}`);
-    } catch (error) {
-      console.error('Error uploading image:', error.response ? error.response.data.message : error.message);
-      setUploadStatus('Failed to upload image');
-    }
-    setUploadStatus('Image uploaded successfully');
-    setImageUploadCompleted(true); // Set the flag indicating upload is complete
-  }; */
 
   const handleAvailableUnitsChange = (event) => {
     const id_value = event.target.value;

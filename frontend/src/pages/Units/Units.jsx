@@ -8,6 +8,7 @@ import { HiTrash } from "react-icons/hi2";
 import { HiPlusCircle } from "react-icons/hi2";
 import { HiQuestionMarkCircle } from "react-icons/hi2";
 
+const apiBaseUrl = import.meta.env.VITE_API_URL;
 
 const Units = () => {
     const [units, setUnits] = useState([]);
@@ -15,7 +16,7 @@ const Units = () => {
     useEffect(() => {
         setLoading(true);
         axios
-            .get('http://localhost:5555/units', {
+            .get(`${apiBaseUrl}/units`, {
                 withCredentials: true
             })
             .then((response) => {

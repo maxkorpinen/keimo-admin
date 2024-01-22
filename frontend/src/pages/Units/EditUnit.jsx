@@ -15,10 +15,12 @@ const EditUnit = () => {
     const navigate = useNavigate();
     const { id } = useParams();
 
+    const apiBaseUrl = import.meta.env.VITE_API_URL;
+
     useEffect(() => {
         setLoading(true);
-        let unitUrl = 'http://localhost:5555/units';
-        let unitByIdUrl = `http://localhost:5555/units/${id}`;
+        let unitUrl = `${apiBaseUrl}/units`;
+        let unitByIdUrl = `${apiBaseUrl}/units/${id}`;
         const promise1 = axios.get(unitUrl, {
             withCredentials: true
         });
@@ -50,7 +52,7 @@ const EditUnit = () => {
         };
         setLoading(true);
         axios
-            .put(`http://localhost:5555/units/${id}`, data, {
+            .put(`${apiBaseUrl}/units/${id}`, data, {
                 withCredentials: true
             })
             .then(() => {

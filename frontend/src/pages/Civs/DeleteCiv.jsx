@@ -4,6 +4,8 @@ import { Spinner } from '../../components/Spinner';;
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 
+const apiBaseUrl = import.meta.env.VITE_API_URL;
+
 const DeleteCiv = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
@@ -11,7 +13,7 @@ const DeleteCiv = () => {
     const handleDeleteCiv = () => {
         setLoading(true);
         axios
-            .delete(`http://localhost:5555/civs/${id}`, {
+            .delete(`${apiBaseUrl}}/civs/${id}`, {
                 withCredentials: true
             })
             .then(() => {

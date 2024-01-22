@@ -4,6 +4,8 @@ import { Spinner } from '../../components/Spinner';;
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 
+const apiBaseUrl = import.meta.env.VITE_API_URL;
+
 const DeleteUnit = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
@@ -11,7 +13,7 @@ const DeleteUnit = () => {
     const handleDeleteUnit = () => {
         setLoading(true);
         axios
-            .delete(`http://localhost:5555/units/${id}`, {
+            .delete(`${apiBaseUrl}/units/${id}`, {
                 withCredentials: true
             })
             .then(() => {

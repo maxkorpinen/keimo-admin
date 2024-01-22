@@ -8,6 +8,7 @@ import { HiTrash } from "react-icons/hi2";
 import { HiPlusCircle } from "react-icons/hi2";
 import { HiQuestionMarkCircle } from "react-icons/hi2";
 
+const apiBaseUrl = import.meta.env.VITE_API_URL;
 
 const Civs = () => {
     const [civs, setCivs] = useState([]);
@@ -15,7 +16,7 @@ const Civs = () => {
     useEffect(() => {
         setLoading(true);
         axios
-            .get('http://localhost:5555/civs', {
+            .get(`${apiBaseUrl}/civs`, {
                 withCredentials: true
             })
             .then((response) => {

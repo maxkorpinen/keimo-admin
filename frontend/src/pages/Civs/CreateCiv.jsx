@@ -4,6 +4,8 @@ import { Spinner } from '../../components/Spinner';;
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
+const apiBaseUrl = import.meta.env.VITE_API_URL;
+
 const CreateCiv = () => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -18,7 +20,7 @@ const CreateCiv = () => {
     };
     setLoading(true);
     axios
-      .post('http://localhost:5555/civs', data, {
+      .post(`${apiBaseUrl}/civs`, data, {
         withCredentials: true
     })
       .then(() => {

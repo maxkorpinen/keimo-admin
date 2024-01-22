@@ -2,7 +2,9 @@ import React, {useEffect, useState} from 'react'
 import axios from 'axios'
 import { useParams } from 'react-router-dom'
 import BackButton from '../../components/BackButton'
-import { Spinner } from '../../components/Spinner'
+import { Spinner } from '../../components/Spinner';
+
+const apiBaseUrl = import.meta.env.VITE_API_URL;
 
 const ShowUnit = () => {
     const [unit, setUnit] = useState({});
@@ -12,7 +14,7 @@ const ShowUnit = () => {
     useEffect(() => {
         setLoading(true);
         axios
-            .get(`http://localhost:5555/units/${id}`, {
+            .get(`${apiBaseUrl}/units/${id}`, {
                 withCredentials: true
             })
             .then((response) => {

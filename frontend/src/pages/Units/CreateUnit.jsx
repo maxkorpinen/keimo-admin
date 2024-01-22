@@ -4,6 +4,8 @@ import { Spinner } from '../../components/Spinner';;
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
+const apiBaseUrl = import.meta.env.VITE_API_URL;
+
 const CreateUnit = () => {
   const [name, setName] = useState('');
   const [building, setBuilding] = useState('');
@@ -18,7 +20,7 @@ const CreateUnit = () => {
     };
     setLoading(true);
     axios
-      .post('http://localhost:5555/units', data, {
+      .post(`${apiBaseUrl}/units`, data, {
         withCredentials: true
     })
       .then(() => {
