@@ -1,5 +1,6 @@
+import 'dotenv/config.js'
 import express from "express";
-import { PORT, mongoDBURL } from "./config.js";
+import { PORT, mongoDBURL, CORS_ORIGIN } from "./config.js";
 import mongoose from "mongoose";
 
 import verifyToken from "./middleware/authMiddleware.js";
@@ -22,7 +23,7 @@ app.use(express.json());
 
 // Middleware for handling CORS policy, allowing custom origins
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: CORS_ORIGIN,
     credentials: true
 }));
 

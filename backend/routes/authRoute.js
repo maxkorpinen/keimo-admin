@@ -2,22 +2,22 @@ import express from 'express';
 import { Admin } from '../models/adminModel.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { JWT_SECRET } from '../config.js';
+import { JWT_SECRET, CORS_ORIGIN } from '../config.js';
 
 const router = express.Router();
 
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
-    console.log("Email:", email); // Check the received email
-    console.log("Password:", password); // Check the received password
+    //console.log("Email:", email); // Check the received email
+    //console.log("Password:", password); // Check the received password
 
     try {
         const admin = await Admin.findOne({ email });
         if (!admin) return res.status(401).send('Authentication failed');
 
         const isMatch = await bcrypt.compare(password, admin.password);
-        console.log(admin)
+        // console.log(admin)
 
         if (!isMatch) return res.status(401).send('Authentication failed');
 
@@ -25,9 +25,10 @@ router.post('/login', async (req, res) => {
 
         res.cookie('token', token, {
             httpOnly: true,
-            sameSite: 'lax', // or 'strict' depending on your needs
-            domain: 'localhost',
-            path: '/'
+            sameSite: 'None', // or 'strict' depending on your needs
+            // domain: CORS_ORIGIN,
+            path: '/',
+            secure: true
         });
 
         res.status(200).send('Login successful');
