@@ -3,6 +3,8 @@ import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
+const apiBaseUrl = import.meta.env.VITE_API_URL;
+
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -12,7 +14,7 @@ const Login = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post('http://localhost:5555/auth/login', { email, password }, { withCredentials: true });
+            const response = await axios.post(`${apiBaseUrl}/auth/login`, { email, password }, { withCredentials: true });
     
             if (response.status === 200) {
                 login(); // Update the login state
