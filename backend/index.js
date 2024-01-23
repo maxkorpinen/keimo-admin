@@ -40,7 +40,7 @@ mongoose
     .connect(mongoDBURL)
     .then(() => {
         console.log('App connected to database');
-        app.listen(PORT, '0.0.0.0', () => {
+        app.listen(PORT || 3000, '0.0.0.0', () => {
             console.log(`App is listening to port ${PORT}`)
         })
     })
