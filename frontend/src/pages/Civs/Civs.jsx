@@ -7,12 +7,14 @@ import { HiPencilSquare } from "react-icons/hi2";
 import { HiTrash } from "react-icons/hi2";
 import { HiPlusCircle } from "react-icons/hi2";
 import { HiQuestionMarkCircle } from "react-icons/hi2";
+import { FaSort } from "react-icons/fa";
 
 const apiBaseUrl = import.meta.env.VITE_API_URL;
 
 const Civs = () => {
     const [civs, setCivs] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [sortOrder, setSortOrder] = useState('asc');
     useEffect(() => {
         setLoading(true);
         axios
@@ -28,7 +30,20 @@ const Civs = () => {
                 console.log(error);
                 setLoading(false);
             });
-    }, [])
+    }, []);
+
+    const toggleSort = () => {
+        setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    };
+
+    const sortedCivs = [...civs].sort((a, b) => {
+        if (sortOrder === 'asc') {
+            return a.name.localeCompare(b.name);
+        } else {
+            return b.name.localeCompare(a.name);
+        }
+    });
+
     return (
         <div className='p-4'>
             <div className='flex justify-between items-center'>
@@ -46,12 +61,17 @@ const Civs = () => {
                     <thead>
                         <tr>
                             <th className=''>#</th>
-                            <th className=''>Name</th>
+                                <th className=''>
+                                    <div className='flex items-center justify-center'>
+                                        Name 
+                                        <button onClick={toggleSort}><FaSort className='text-xl ml-1' /></button>
+                                    </div>
+                                </th>
                             <th className=''>Description</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {civs.map((civ, index) =>
+                        {sortedCivs.map((civ, index) =>
                             <tr key={civ._id} className='h-8'>
                                 <td className='text-center'>
                                     {index + 1}

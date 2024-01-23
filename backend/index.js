@@ -21,9 +21,31 @@ app.use(express.json());
 // Middleware for handling CORS policy, allowing all origins
 // app.use(cors());
 
-// Middleware for handling CORS policy, allowing custom origins
+// Middleware for handling CORS policy, allowing custom origins based on environment
 app.use(cors({
-    origin: CORS_ORIGIN,
+    origin: function (origin, callback) {
+        // Allow requests with no origin (like mobile apps, curl requests)
+        if (!origin) return callback(null, true);
+
+        // Allow the frontend development server URL in development
+        if (process.env.NODE_ENV === 'development') {
+            const allowedDevOrigins = ['http://localhost:5173']; // Add other dev origins if needed
+            if (allowedDevOrigins.indexOf(origin) !== -1) {
+                return callback(null, true);
+            } else {
+                return callback(new Error('CORS Policy Error'), false);
+            }
+        }
+
+        // Allow the production frontend URL in production
+        if (process.env.NODE_ENV === 'production') {
+            if (origin === CORS_ORIGIN) {
+                return callback(null, true);
+            } else {
+                return callback(new Error('CORS Policy Error'), false);
+            }
+        }
+    },
     credentials: true
 }));
 
