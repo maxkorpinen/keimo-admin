@@ -2,22 +2,26 @@ import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { Spinner } from '../components/Spinner';
 
 const apiBaseUrl = import.meta.env.VITE_API_URL;
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
     const { login } = useAuth();
     const navigate = useNavigate();
 
     const handleSubmit = async (event) => {
+        setLoading(true);
         event.preventDefault();
         try {
             const response = await axios.post(`${apiBaseUrl}/auth/login`, { email, password }, { withCredentials: true });
     
             if (response.status === 200) {
                 login(); // Update the login state
+                setLoading(false);
                 navigate('/'); // Redirect to the home page or another protected route
             } else {
                 // Handle unsuccessful login
@@ -31,6 +35,9 @@ const Login = () => {
 
     return (
         <div className="flex justify-center items-center h-screen">
+             {loading ? (
+                <Spinner />
+            ) : (
             <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
@@ -66,7 +73,7 @@ const Login = () => {
                     </button>
                 </div>
             </form>
-        </div>
+            )}</div>
     )
 }
 
