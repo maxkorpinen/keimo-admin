@@ -28,7 +28,8 @@ router.post('/login', async (req, res) => {
             sameSite: 'None', // or 'strict' depending on your needs
             // domain: CORS_ORIGIN,
             path: '/',
-            secure: true
+            secure: true,
+            maxAge: 1000 * 60 * 60
         });
 
         res.status(200).send('Login successful');
