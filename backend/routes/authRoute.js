@@ -11,6 +11,7 @@ router.post('/login', async (req, res) => {
 
     //console.log("Email:", email); // Check the received email
     //console.log("Password:", password); // Check the received password
+    // Adding a comment to test Github Actions
 
     try {
         const admin = await Admin.findOne({ email });
