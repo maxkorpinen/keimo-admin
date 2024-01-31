@@ -66,7 +66,7 @@ router.get('/:id', async (request, response) => {
 router.get('/:id/image', async (request, response) => {
     const civ = await Civ.findById(request.params.id);
     if (!civ) {
-        return response.status(404).send({ message: 'Civ not found' });
+        return response.status(404).send({ message: 'Civ is not found' });
     }
 
     const imageUrl = civ.image;
