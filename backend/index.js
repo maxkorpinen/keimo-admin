@@ -27,23 +27,17 @@ app.use(cors({
         // Allow requests with no origin (like mobile apps, curl requests)
         if (!origin) return callback(null, true);
 
-        // Allow the frontend development server URL in development
-        if (process.env.NODE_ENV === 'development') {
-            const allowedDevOrigins = ['http://localhost:5173']; // Add other dev origins if needed
-            if (allowedDevOrigins.indexOf(origin) !== -1) {
-                return callback(null, true);
-            } else {
-                return callback(new Error('CORS Policy Error'), false);
-            }
-        }
+        // Define allowed origins for each environment
+        const allowedOrigins = {
+            development: ['http://localhost:5173'],
+            production: [process.env.CORS_ORIGIN]
+        };
 
-        // Allow the production frontend URL in production
-        if (process.env.NODE_ENV === 'production') {
-            if (origin === CORS_ORIGIN) {
-                return callback(null, true);
-            } else {
-                return callback(new Error('CORS Policy Error'), false);
-            }
+        // Check if the origin is allowed
+        if (allowedOrigins[process.env.NODE_ENV].indexOf(origin) !== -1) {
+            return callback(null, true);
+        } else {
+            return callback(new Error('CORS Policy Error'), false);
         }
     },
     credentials: true
