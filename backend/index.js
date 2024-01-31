@@ -50,7 +50,6 @@ app.use(cors({
 }));
 
 app.get('/', (request, response) => {
-    console.log(request)
     return response.status(234).send('We are live')
 });
 

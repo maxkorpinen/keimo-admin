@@ -3,7 +3,6 @@ import { JWT_SECRET } from '../config.js';
 
 const verifyToken = (req, res, next) => {
     const token = req.cookies.token; // Extract the token from cookies
-    console.log(req)
 
     if (!token) {
         return res.status(401).send('Access Denied: No Token Provided!');

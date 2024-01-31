@@ -75,7 +75,6 @@ router.get('/:id/image', async (request, response) => {
         if (!unit || !unit.image) {
             throw new Error('Image not found');
         }
-        console.log(unit.image)
         response.set('Content-Type', 'image/jpeg');
         response.send(unit.image);
     } catch (error) {

@@ -35,7 +35,7 @@ const EditCiv = () => {
         setName(response[1].data.name);
         setDescription(response[1].data.description);
         setCivUnits(response[1].data.units)
-        setImageUrl(`${apiBaseUrl}/civs/${id}/image`);
+        setImageUrl(response[1].data.image);
         setLoading(false)
       }).catch((error) => {
         setLoading(false);
@@ -43,13 +43,6 @@ const EditCiv = () => {
         console.log(error);
       });
   }, [id]);
-
-  useEffect(() => {
-    if (imageUploadCompleted && image) {
-      setImageUrl(`${apiBaseUrl}/civs/${id}/image?t=${new Date().getTime()}`);
-      setImageUploadCompleted(false); // Reset the flag
-    }
-  }, [id, imageUploadCompleted, image]);
 
   const handleEditCiv = () => {
     const data = {
@@ -73,29 +66,30 @@ const EditCiv = () => {
       })
   };
 
-  const uploadImage = async (uploadedImage) => { // Pass the image directly
+  const uploadImage = async (uploadedImage) => {
     try {
-        setLoading(true)
-        const formData = new FormData();
-        formData.append('image', uploadedImage);
+      setLoading(true);
+      const formData = new FormData();
+      formData.append('image', uploadedImage);
 
-        const response = await axios.put(`${apiBaseUrl}/civs/${id}/image`, formData,{
-          withCredentials: true
-      },{
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        });
+      const response = await axios.put(`${apiBaseUrl}/civs/${id}/image`, formData, {
+        withCredentials: true,
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
 
-        console.log(response.data.message);
-        setUploadStatus('Image uploaded successfully');
-        setImageUploadCompleted(true); // Set flag only if upload is successful
+      // Update the imageUrl state with the new image URL provided by the backend
+      if (response.data.imageUrl) {
+        setImageUrl(response.data.imageUrl);
+      }
+
+      console.log(response.data.message);
+      setUploadStatus('Image uploaded successfully');
     } catch (error) {
-        console.error('Error uploading image:', error.response ? error.response.data.message : error.message);
-        setUploadStatus('Failed to upload image');
+      console.error('Error uploading image:', error.response ? error.response.data.message : error.message);
+      setUploadStatus('Failed to upload image');
     }
-    setLoading(false)
-};
+    setLoading(false);
+  };
 
   const handleAvailableUnitsChange = (event) => {
     const id_value = event.target.value;

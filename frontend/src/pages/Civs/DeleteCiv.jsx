@@ -13,7 +13,7 @@ const DeleteCiv = () => {
     const handleDeleteCiv = () => {
         setLoading(true);
         axios
-            .delete(`${apiBaseUrl}}/civs/${id}`, {
+            .delete(`${apiBaseUrl}/civs/${id}`, {
                 withCredentials: true
             })
             .then(() => {

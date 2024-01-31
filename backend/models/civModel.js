@@ -11,7 +11,7 @@ const civSchema = mongoose.Schema(
             required: false
         },
         image: {
-            type: Buffer,
+            type: String,
             required: false
         },
         units: [

@@ -61,12 +61,13 @@ const Civs = () => {
                     <thead>
                         <tr>
                             <th className=''>#</th>
-                                <th className=''>
-                                    <div className='flex items-center justify-center'>
-                                        Name 
-                                        <button onClick={toggleSort}><FaSort className='text-xl ml-1' /></button>
-                                    </div>
-                                </th>
+                            <th className=''>Image</th>
+                            <th className=''>
+                                <div className='flex items-center justify-center'>
+                                    Name 
+                                    <button onClick={toggleSort}><FaSort className='text-xl ml-1' /></button>
+                                </div>
+                            </th>
                             <th className=''>Description</th>
                         </tr>
                     </thead>
@@ -75,6 +76,9 @@ const Civs = () => {
                             <tr key={civ._id} className='h-8'>
                                 <td className='text-center'>
                                     {index + 1}
+                                </td>
+                                <td className='text-center'>
+                                    <img src={civ.image} alt={civ.name} className='w-20 h-20 mx-auto' />
                                 </td>
                                 <td className='text-center'>
                                     {civ.name}
