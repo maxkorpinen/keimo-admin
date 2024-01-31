@@ -36,6 +36,7 @@ const EditCiv = () => {
         setDescription(response[1].data.description);
         setCivUnits(response[1].data.units)
         setImageUrl(response[1].data.image);
+        console.log(response[1].data.image);
         setLoading(false)
       }).catch((error) => {
         setLoading(false);
