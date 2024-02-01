@@ -17,7 +17,7 @@ const unitSchema = mongoose.Schema(
         counterOf: [],
         counteredBy: [],
         image: { 
-            type: Buffer, 
+            type: String, 
             required: false 
         }
     },
