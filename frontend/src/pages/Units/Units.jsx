@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import axios from 'axios';
 import { Spinner } from '../../components/Spinner';
 import { Link } from 'react-router-dom';
@@ -72,6 +72,7 @@ const Units = () => {
                     <thead>
                         <tr>
                             <th className=''>#</th>
+                            <th className=''>Image</th>
                             <th className=''>
                                 <div className='flex items-center justify-center'>
                                     Name 
@@ -97,6 +98,9 @@ const Units = () => {
                             <tr key={unit._id} className='h-8'>
                                 <td className='text-center'>
                                     {index + 1}
+                                </td>
+                                <td className='text-center'>
+                                    <img src={unit.image} alt={unit.name} className='w-20 h-20 mx-auto' />
                                 </td>
                                 <td className='text-center'>
                                     {unit.name}

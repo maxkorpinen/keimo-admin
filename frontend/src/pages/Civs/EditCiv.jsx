@@ -14,7 +14,6 @@ const EditCiv = () => {
   const [image, setImage] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
   const [uploadStatus, setUploadStatus] = useState('');
-  const [imageUploadCompleted, setImageUploadCompleted] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams();

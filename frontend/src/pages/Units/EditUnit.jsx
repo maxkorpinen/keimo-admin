@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import BackButton from '../../components/BackButton';
-import { Spinner } from '../../components/Spinner';;
+import { Spinner } from '../../components/Spinner';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -11,6 +11,9 @@ const EditUnit = () => {
     const [isGoldUnit, setIsGoldUnit] = useState(false);
     const [counterOf, setCounterOf] = useState([]);
     const [counteredBy, setCounteredBy] = useState([]);
+    const [image, setImage] = useState(null);
+    const [imageUrl, setImageUrl] = useState(null);
+    const [uploadStatus, setUploadStatus] = useState('');
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const { id } = useParams();
@@ -31,6 +34,7 @@ const EditUnit = () => {
             .then((response) => {
                 setUnits(response[0].data.data)
                 setName(response[1].data.name);
+                setImageUrl(response[1].data.image);
                 setBuilding(response[1].data.building);
                 setIsGoldUnit(response[1].data.isGoldUnit);
                 setCounterOf(response[1].data.counterOf);
@@ -65,6 +69,40 @@ const EditUnit = () => {
                 console.log(error);
             })
     };
+
+    const uploadImage = async (uploadedImage) => {
+        try {
+          setLoading(true);
+          const formData = new FormData();
+          formData.append('image', uploadedImage);
+    
+          const response = await axios.put(`${apiBaseUrl}/units/${id}/image`, formData, {
+            withCredentials: true,
+            headers: { 'Content-Type': 'multipart/form-data' }
+          });
+    
+          // Update the imageUrl state with the new image URL provided by the backend
+          if (response.data.imageUrl) {
+            setImageUrl(response.data.imageUrl);
+          }
+    
+          console.log(response.data.message);
+          setUploadStatus('Image uploaded successfully');
+        } catch (error) {
+          console.error('Error uploading image:', error.response ? error.response.data.message : error.message);
+          setUploadStatus('Failed to upload image');
+        }
+        setLoading(false);
+      };
+
+      const handleImageChange = (e) => {
+        if (e.target.files && e.target.files[0]) {
+            const selectedImage = e.target.files[0];
+            setImage(selectedImage); // Set the image state
+            uploadImage(selectedImage); // Call uploadImage with the selected image
+        }
+    };
+
     const handlecCheckBoxChange = () => {
         setIsGoldUnit(!isGoldUnit);
     };
@@ -138,6 +176,17 @@ const EditUnit = () => {
                     />
                     <label className='text-xl text-gray-500'>This is a gold unit</label>
                 </div>
+                <div>
+          {imageUrl && <img src={imageUrl} alt="Unit" />}
+        </div>
+        <div className='my-4'>
+          <label className='text-xl mr-4 text-gray-500'>Unit Image</label>
+          <input
+            type="file"
+            onChange={handleImageChange}
+            className='border-2 border-gray-500 px-4 py-2 w-full'
+          />
+        </div>
                 <div className='my-4'>
                     <p className='text-xl mr-4 text-gray-500'>Unit is <b>strong against</b> the following units:</p>
                     {units.map((unit) =>
