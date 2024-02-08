@@ -3,18 +3,14 @@ import { Unit } from '../models/unitModel.js';
 import mongoose from "mongoose";
 import multer from 'multer';
 
-const router = express.Router();
+import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { v4 as uuidv4 } from 'uuid';
 
-const upload = multer({ 
-    limits: { fileSize: 2500000 }, // Limit file size 2.5MB
-    fileFilter(request, file, cb) {
-        //console.log(request.file)
-        if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
-            return cb(new Error('Please upload an image file (jpg, jpeg, png).'));
-        }
-        cb(undefined, true);
-    }
-});
+const s3 = new S3Client({ region: process.env.AWS_REGION });
+
+const upload = multer({ limits: { fileSize: 2500000 } });
+
+const router = express.Router();
 
 // Route for saving a new Unit
 router.post('/', async (request, response) => {
@@ -166,10 +162,42 @@ router.put('/:id/image', upload.single('image'), async (request, response) => {
         if (!unit) {
             return response.status(404).send({ message: 'Unit not found' });
         }
-        unit.image = request.file.buffer;
-        //console.log(unit.image)
+
+        // Check if the old image is a string
+        if (typeof unit.image === 'string') {
+            // Extract the key of the old image from the image URL
+            const oldImageUrl = unit.image;
+            const oldImageKey = oldImageUrl.split('.amazonaws.com/')[1];
+
+            // Delete the old image from the S3 bucket
+            const deleteParams = { Bucket: process.env.AWS_BUCKET_NAME, Key: oldImageKey.replace(/ /g, '%20') };
+            const deleteCommand = new DeleteObjectCommand(deleteParams);
+            await s3.send(deleteCommand);
+        }
+
+        const key = `${uuidv4()}-${request.file.originalname.replace(/ /g, '_')}`; // generate a unique key for each image
+
+        const uploadParams = {
+            Bucket: process.env.AWS_BUCKET_NAME,
+            Key: key,
+            Body: request.file.buffer,
+            ContentType: request.file.mimetype,
+            // ACL: 'public-read'
+        };
+
+        const command = new PutObjectCommand(uploadParams);
+
+        await s3.send(command);
+
+        const region = await s3.config.region();
+        const imageUrl = `https://${uploadParams.Bucket}.s3.${region}.amazonaws.com/${uploadParams.Key}`;
+
+        // store the image URL in the database instead of the image itself
+        unit.image = imageUrl;
+
         await unit.save();
-        response.send({ message: 'Unit image uploaded successfully' });
+
+        response.send({ message: 'Unit image uploaded successfully', imageUrl: imageUrl });
     } catch (error) {
         console.log(error.message);
         response.status(500).send({ message: error.message });
