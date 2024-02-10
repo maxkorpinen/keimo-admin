@@ -11,9 +11,9 @@ const EditUnit = () => {
     const [isGoldUnit, setIsGoldUnit] = useState(false);
     const [counterOf, setCounterOf] = useState([]);
     const [counteredBy, setCounteredBy] = useState([]);
-    const [image, setImage] = useState(null);
+    // const [image, setImage] = useState(null);
     const [imageUrl, setImageUrl] = useState(null);
-    const [uploadStatus, setUploadStatus] = useState('');
+    // const [uploadStatus, setUploadStatus] = useState('');
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const { id } = useParams();
@@ -45,7 +45,7 @@ const EditUnit = () => {
                 alert('An error happened. Check Console for details.');
                 console.log(error);
             });
-    }, [])
+    }, [apiBaseUrl, id])
     const handleEditUnit = () => {
         const data = {
             name,
@@ -72,34 +72,29 @@ const EditUnit = () => {
 
     const uploadImage = async (uploadedImage) => {
         try {
-          setLoading(true);
-          const formData = new FormData();
-          formData.append('image', uploadedImage);
+            setLoading(true);
+            const formData = new FormData();
+            formData.append('image', uploadedImage);
     
-          const response = await axios.put(`${apiBaseUrl}/units/${id}/image`, formData, {
-            withCredentials: true,
-            headers: { 'Content-Type': 'multipart/form-data' }
-          });
+            const response = await axios.put(`${apiBaseUrl}/units/${id}/image`, formData, {
+                withCredentials: true,
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
     
-          // Update the imageUrl state with the new image URL provided by the backend
-          if (response.data.imageUrl) {
-            setImageUrl(response.data.imageUrl);
-          }
-    
-          console.log(response.data.message);
-          setUploadStatus('Image uploaded successfully');
+            if (response.data.imageUrl) {
+                setImageUrl(response.data.imageUrl);
+            }
         } catch (error) {
-          console.error('Error uploading image:', error.response ? error.response.data.message : error.message);
-          setUploadStatus('Failed to upload image');
+            console.error('Error uploading image:', error.response ? error.response.data : error.message);
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
-      };
+    };
 
-      const handleImageChange = (e) => {
+    const handleImageChange = (e) => {
         if (e.target.files && e.target.files[0]) {
             const selectedImage = e.target.files[0];
-            setImage(selectedImage); // Set the image state
-            uploadImage(selectedImage); // Call uploadImage with the selected image
+            uploadImage(selectedImage);
         }
     };
 
@@ -150,7 +145,7 @@ const EditUnit = () => {
                 </div>
                 <div className='my-4'>
                     <label className='text-xl mr-4 text-gray-500'>Building</label>
-{/*                     <input
+                    {/*                     <input
                         type='text'
                         value={building}
                         onChange={}
@@ -177,16 +172,16 @@ const EditUnit = () => {
                     <label className='text-xl text-gray-500'>This is a gold unit</label>
                 </div>
                 <div>
-          {imageUrl && <img src={imageUrl} alt="Unit" />}
-        </div>
-        <div className='my-4'>
-          <label className='text-xl mr-4 text-gray-500'>Unit Image</label>
-          <input
-            type="file"
-            onChange={handleImageChange}
-            className='border-2 border-gray-500 px-4 py-2 w-full'
-          />
-        </div>
+                    {imageUrl && <img src={imageUrl} alt="Unit" />}
+                </div>
+                <div className='my-4'>
+                    <label className='text-xl mr-4 text-gray-500'>Unit Image</label>
+                    <input
+                        type="file"
+                        onChange={handleImageChange}
+                        className='border-2 border-gray-500 px-4 py-2 w-full'
+                    />
+                </div>
                 <div className='my-4'>
                     <p className='text-xl mr-4 text-gray-500'>Unit is <b>strong against</b> the following units:</p>
                     {units.map((unit) =>

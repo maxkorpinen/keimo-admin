@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import BackButton from '../../components/BackButton';
-import { Spinner } from '../../components/Spinner';;
+import { Spinner } from '../../components/Spinner';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -11,9 +11,9 @@ const EditCiv = () => {
   const [civUnits, setCivUnits] = useState([])
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [image, setImage] = useState(null);
+  // const [image, setImage] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
-  const [uploadStatus, setUploadStatus] = useState('');
+  // const [uploadStatus, setUploadStatus] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams();
@@ -68,28 +68,29 @@ const EditCiv = () => {
 
   const uploadImage = async (uploadedImage) => {
     try {
-      setLoading(true);
-      const formData = new FormData();
-      formData.append('image', uploadedImage);
+        setLoading(true);
+        const formData = new FormData();
+        formData.append('image', uploadedImage);
 
-      const response = await axios.put(`${apiBaseUrl}/civs/${id}/image`, formData, {
-        withCredentials: true,
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
+        const response = await axios.put(`${apiBaseUrl}/civs/${id}/image`, formData, {
+            withCredentials: true,
+            headers: { 'Content-Type': 'multipart/form-data' }
+        });
 
-      // Update the imageUrl state with the new image URL provided by the backend
-      if (response.data.imageUrl) {
-        setImageUrl(response.data.imageUrl);
-      }
+        // Update the imageUrl state with the new image URL provided by the backend
+        if (response.data.imageUrl) {
+            setImageUrl(response.data.imageUrl);
+        }
 
-      console.log(response.data.message);
-      setUploadStatus('Image uploaded successfully');
+        console.log(response.data.message);
+        // Removed setUploadStatus call
     } catch (error) {
-      console.error('Error uploading image:', error.response ? error.response.data.message : error.message);
-      setUploadStatus('Failed to upload image');
+        console.error('Error uploading image:', error.response ? error.response.data.message : error.message);
+        // Removed setUploadStatus call
+    } finally {
+        setLoading(false);
     }
-    setLoading(false);
-  };
+};
 
   const handleAvailableUnitsChange = (event) => {
     const id_value = event.target.value;
@@ -119,10 +120,9 @@ const EditCiv = () => {
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
         const selectedImage = e.target.files[0];
-        setImage(selectedImage); // Set the image state
         uploadImage(selectedImage); // Call uploadImage with the selected image
     }
-};
+  };
 
   return (
     <div className='p-4'>

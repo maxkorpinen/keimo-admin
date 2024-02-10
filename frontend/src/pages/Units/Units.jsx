@@ -23,6 +23,7 @@ const Units = () => {
             })
             .then((response) => {
                 setUnits(response.data.data);
+                console.log(response.data.data);
                 setLoading(false);
             })
             .catch((error) => {
