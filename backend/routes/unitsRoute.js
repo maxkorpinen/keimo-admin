@@ -71,8 +71,9 @@ router.get('/:id/image', async (request, response) => {
         if (!unit || !unit.image) {
             throw new Error('Image not found');
         }
-        response.set('Content-Type', 'image/jpeg');
-        response.send(unit.image);
+        const imageUrl = unit.image;
+        console.log(imageUrl);
+        response.send({ imageUrl: imageUrl });
     } catch (error) {
         console.log(error.message);
         response.status(404).send({ message: error.message });
@@ -175,7 +176,7 @@ router.put('/:id/image', upload.single('image'), async (request, response) => {
             await s3.send(deleteCommand);
         }
 
-        const key = `${uuidv4()}-${request.file.originalname.replace(/ /g, '_')}`; // generate a unique key for each image
+        const key = `${uuidv4()}-${request.file.originalname.replace(/ /g, '_')}`;
 
         const uploadParams = {
             Bucket: process.env.AWS_BUCKET_NAME,
@@ -192,7 +193,6 @@ router.put('/:id/image', upload.single('image'), async (request, response) => {
         const region = await s3.config.region();
         const imageUrl = `https://${uploadParams.Bucket}.s3.${region}.amazonaws.com/${uploadParams.Key}`;
 
-        // store the image URL in the database instead of the image itself
         unit.image = imageUrl;
 
         await unit.save();
@@ -203,7 +203,6 @@ router.put('/:id/image', upload.single('image'), async (request, response) => {
         response.status(500).send({ message: error.message });
     }
 });
-
 // Route for deleting a Unit
 router.delete('/:id', async (request, response) => {
     try {

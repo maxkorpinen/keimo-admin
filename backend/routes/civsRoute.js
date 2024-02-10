@@ -1,7 +1,6 @@
 import express from 'express';
 import { Civ } from '../models/civModel.js';
 import multer from 'multer';
-// import s3 from '../aws-config.js';
 
 import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { v4 as uuidv4 } from 'uuid';
