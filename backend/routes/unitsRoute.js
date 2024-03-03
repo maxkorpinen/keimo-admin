@@ -203,14 +203,17 @@ router.put('/:id/image', upload.single('image'), async (request, response) => {
         response.status(500).send({ message: error.message });
     }
 });
+
 // Route for deleting a Unit
 router.delete('/:id', async (request, response) => {
     try {
         const { id } = request.params;
-        const result = await Unit.findByIdAndDelete(id);
-        if (!result) {
+        const unit = await Unit.findById(id);
+        if (!unit) {
             return response.status(404).json({ message: 'Unit not found' })
         }
+        await Unit.deleteOne({ _id: id }); // Changed to a deleteOne operation on the Unit model
+
         return response.status(200).send({ message: 'Unit deleted successfully' })
     } catch (error) {
         console.log(error.message);

@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { Civ } from "./civModel.js";
 
 const unitSchema = mongoose.Schema(
     {
@@ -25,5 +26,21 @@ const unitSchema = mongoose.Schema(
         timestamps: true,
     }
 );
+
+// Keep as a pre middleware for the 'deleteOne' method
+unitSchema.pre('deleteOne', { document: false, query: true }, async function(next) {
+    const unitId = this.getQuery()._id;
+    // Remove the unit from all Civ documents
+    await Civ.updateMany(
+        { }, 
+        { $pull: { units: { unit: unitId } } }
+    );
+    // Remove the unit from the counterOf and counteredBy arrays of all Unit documents
+    await Unit.updateMany(
+        { }, 
+        { $pull: { counterOf: unitId, counteredBy: unitId } }
+    );
+    next();
+});
 
 export const Unit = mongoose.model('Unit', unitSchema);

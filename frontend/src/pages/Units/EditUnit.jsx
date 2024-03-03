@@ -39,7 +39,7 @@ const EditUnit = () => {
                 setIsGoldUnit(response[1].data.isGoldUnit);
                 setCounterOf(response[1].data.counterOf);
                 setCounteredBy(response[1].data.counteredBy);
-                setLoading(false)
+                setLoading(false);
             }).catch((error) => {
                 setLoading(false);
                 alert('An error happened. Check Console for details.');
