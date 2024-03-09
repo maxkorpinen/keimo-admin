@@ -9,6 +9,8 @@ const EditUnit = () => {
     const [name, setName] = useState('');
     const [building, setBuilding] = useState('');
     const [isGoldUnit, setIsGoldUnit] = useState(false);
+    const [isMeta, setIsMeta] = useState(false);
+    const [isUnique, setIsUnique] = useState(false);
     const [counterOf, setCounterOf] = useState([]);
     const [counteredBy, setCounteredBy] = useState([]);
     // const [image, setImage] = useState(null);
@@ -37,6 +39,8 @@ const EditUnit = () => {
                 setImageUrl(response[1].data.image);
                 setBuilding(response[1].data.building);
                 setIsGoldUnit(response[1].data.isGoldUnit);
+                setIsMeta(response[1].data.isMeta);
+                setIsUnique(response[1].data.isUnique);
                 setCounterOf(response[1].data.counterOf);
                 setCounteredBy(response[1].data.counteredBy);
                 setLoading(false);
@@ -50,7 +54,9 @@ const EditUnit = () => {
         const data = {
             name,
             building,
-            isGoldUnit,
+            isGoldUnit: isGoldUnit || false,
+            isMeta: isMeta || false,
+            isUnique: isUnique || false,
             counterOf,
             counteredBy
         };
@@ -75,12 +81,12 @@ const EditUnit = () => {
             setLoading(true);
             const formData = new FormData();
             formData.append('image', uploadedImage);
-    
+
             const response = await axios.put(`${apiBaseUrl}/units/${id}/image`, formData, {
                 withCredentials: true,
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
-    
+
             if (response.data.imageUrl) {
                 setImageUrl(response.data.imageUrl);
             }
@@ -98,8 +104,8 @@ const EditUnit = () => {
         }
     };
 
-    const handlecCheckBoxChange = () => {
-        setIsGoldUnit(!isGoldUnit);
+    const handleCheckBoxChange = (setFunction) => () => {
+        setFunction((prev) => !prev);
     };
     // something not working here
     const handleCounterOfChange = (event) => {
@@ -166,10 +172,28 @@ const EditUnit = () => {
                         type='checkbox'
                         value={'Gold Unit'}
                         checked={isGoldUnit}
-                        onChange={handlecCheckBoxChange}
+                        onChange={handleCheckBoxChange(setIsGoldUnit)}
                         className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2'
                     />
                     <label className='text-xl text-gray-500'>This is a gold unit</label>
+                </div>
+                <div className='my-4'>
+                    <input
+                        type='checkbox'
+                        checked={isMeta}
+                        onChange={handleCheckBoxChange(setIsMeta)}
+                        className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2'
+                    />
+                    <label className='text-xl text-gray-500'>This is a meta unit</label>
+                </div>
+                <div className='my-4'>
+                    <input
+                        type='checkbox'
+                        checked={isUnique}
+                        onChange={handleCheckBoxChange(setIsUnique)}
+                        className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2'
+                    />
+                    <label className='text-xl text-gray-500'>This is a unique unit</label>
                 </div>
                 <div>
                     {imageUrl && <img src={imageUrl} alt="Unit" />}

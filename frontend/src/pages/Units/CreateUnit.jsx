@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import BackButton from '../../components/BackButton';
-import { Spinner } from '../../components/Spinner';;
+import { Spinner } from '../../components/Spinner';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -10,13 +10,17 @@ const CreateUnit = () => {
   const [name, setName] = useState('');
   const [building, setBuilding] = useState('');
   const [isGoldUnit, setIsGoldUnit] = useState(false);
+  const [isMeta, setIsMeta] = useState(false); // Added
+  const [isUnique, setIsUnique] = useState(false); // Added
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const handleSaveUnit = () => {
     const data = {
       name,
       building,
-      isGoldUnit
+      isGoldUnit: isGoldUnit || false,
+      isMeta: isMeta || false,
+      isUnique: isUnique || false,
     };
     setLoading(true);
     axios
@@ -33,8 +37,8 @@ const CreateUnit = () => {
         console.log(error);
       })
   };
-  const handlecCheckBoxChange = () => {
-    setIsGoldUnit(!isGoldUnit);
+  const handleCheckBoxChange = (setFunction) => () => {
+    setFunction((prev) => !prev);
   };
   return (
     <div className='p-4'>
@@ -62,6 +66,7 @@ const CreateUnit = () => {
             <option value="Barracks">Barracks</option>
             <option value="Archery Range">Archery Range</option>
             <option value="Stable">Stable</option>
+            <option value="Castle">Castle</option>
           </select>
         </div>
         <div className='my-4'>
@@ -69,11 +74,29 @@ const CreateUnit = () => {
             type='checkbox'
             value={'Gold Unit'}
             checked={isGoldUnit}
-            onChange={handlecCheckBoxChange}
+            onChange={handleCheckBoxChange(setIsGoldUnit)}
             className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2'
           />
           <label className='text-xl text-gray-500'>This is a gold unit</label>
         </div>
+        <div className='my-4'>
+      <input
+        type='checkbox'
+        checked={isMeta}
+        onChange={handleCheckBoxChange(setIsMeta)}
+        className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2'
+      />
+      <label className='text-xl text-gray-500'>This is a meta unit</label>
+    </div>
+    <div className='my-4'>
+      <input
+        type='checkbox'
+        checked={isUnique}
+        onChange={handleCheckBoxChange(setIsUnique)}
+        className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2'
+      />
+      <label className='text-xl text-gray-500'>This is a unique unit</label>
+    </div>
         <button className='w-full p-2 bg-sky-500 text-white mt-4' onClick={handleSaveUnit}>
           Save
         </button>

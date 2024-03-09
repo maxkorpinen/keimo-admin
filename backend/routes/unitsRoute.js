@@ -27,6 +27,8 @@ router.post('/', async (request, response) => {
             name: request.body.name,
             building: request.body.building,
             isGoldUnit: request.body.isGoldUnit,
+            isMeta: request.body.isMeta,
+            isUnique: request.body.isUnique,
             counterOf: request.body.counterOf,
             counteredBy: request.body.counteredBy
         }

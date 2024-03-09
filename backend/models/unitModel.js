@@ -11,15 +11,23 @@ const unitSchema = mongoose.Schema(
             type: String,
             required: true
         },
-        isGoldUnit: { 
+        isGoldUnit: {
+            type: Boolean,
+            required: true
+        },
+        isMeta: {
+            type: Boolean,
+            required: true
+        },
+        isUnique: {
             type: Boolean,
             required: true
         },
         counterOf: [],
         counteredBy: [],
-        image: { 
-            type: String, 
-            required: false 
+        image: {
+            type: String,
+            required: false
         }
     },
     {
@@ -28,16 +36,16 @@ const unitSchema = mongoose.Schema(
 );
 
 // Keep as a pre middleware for the 'deleteOne' method
-unitSchema.pre('deleteOne', { document: false, query: true }, async function(next) {
+unitSchema.pre('deleteOne', { document: false, query: true }, async function (next) {
     const unitId = this.getQuery()._id;
     // Remove the unit from all Civ documents
     await Civ.updateMany(
-        { }, 
+        {},
         { $pull: { units: { unit: unitId } } }
     );
     // Remove the unit from the counterOf and counteredBy arrays of all Unit documents
     await Unit.updateMany(
-        { }, 
+        {},
         { $pull: { counterOf: unitId, counteredBy: unitId } }
     );
     next();

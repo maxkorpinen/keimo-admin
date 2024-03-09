@@ -15,6 +15,7 @@ const Units = () => {
     const [units, setUnits] = useState([]);
     const [loading, setLoading] = useState(false);
     const [sortConfig, setSortConfig] = useState({ column: 'building', direction: 'asc' });
+    const [showUnique, setShowUnique] = useState(true);
     useEffect(() => {
         setLoading(true);
         axios
@@ -42,6 +43,9 @@ const Units = () => {
 
     const sortedUnits = useMemo(() => {
         let sortableItems = [...units];
+        if (!showUnique) { // Change this line
+            sortableItems = sortableItems.filter(unit => !unit.isUnique); // Change this line
+        }
         if (sortConfig !== null) {
             sortableItems.sort((a, b) => {
                 if (a[sortConfig.column] < b[sortConfig.column]) {
@@ -54,7 +58,7 @@ const Units = () => {
             });
         }
         return sortableItems;
-    }, [units, sortConfig]);
+    }, [units, sortConfig, showUnique]);
 
     return (
         <div className='p-4'>
@@ -62,9 +66,22 @@ const Units = () => {
                 <h1 className='text-3xl my-8'>
                     All Units
                 </h1>
-                <Link to='/units/create'>
-                <HiPlusCircle className='text-green-500 text-7xl mx-7' />
-                </Link>
+                <div>
+                    <Link to='/units/create'>
+                        <HiPlusCircle className='text-green-500 text-7xl mx-7' />
+                    </Link>
+                </div>
+            </div>
+            <div>
+                <label className='text-xl text-gray-500'>
+                    <input
+                        type="checkbox"
+                        checked={showUnique}
+                        onChange={e => setShowUnique(e.target.checked)}
+                        className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2'
+                    />
+                    Show Unique Units
+                </label>
             </div>
             {loading ? (
                 <Spinner />
@@ -92,6 +109,12 @@ const Units = () => {
                                     <button onClick={() => requestSort('building')}><FaSort className='text-xl ml-1' /></button>
                                 </div>
                             </th>
+                            <th className=''>
+                                <div className='flex items-center justify-center'>
+                                    Unique 
+                                    <button onClick={() => requestSort('isUnique')}><FaSort className='text-xl ml-1' /></button>
+                                </div>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -111,6 +134,9 @@ const Units = () => {
                                 </td>
                                 <td className='text-center'>
                                     {unit.building}
+                                </td>
+                                <td className='text-center'>
+                                    {unit.isUnique ? 'Yes' : 'No'}
                                 </td>
                                 <td className='text-center'>
                                     <div className='flex justify-center gap-x-4'>
