@@ -67,6 +67,8 @@ const CreateUnit = () => {
             <option value="Archery Range">Archery Range</option>
             <option value="Stable">Stable</option>
             <option value="Castle">Castle</option>
+            <option value="Donjon">Donjon</option>
+            <option value="Fortified Church">Fortified Church</option>
           </select>
         </div>
         <div className='my-4'>
