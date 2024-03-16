@@ -1,5 +1,4 @@
-import React from 'react'
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 
@@ -22,7 +21,7 @@ function App() {
     <AuthProvider>
       <div className='min-h-screen bg-gray-100 text-gray-900'>
       <Navbar />
-      <div className='max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-4'>
+      <div className='mx-auto px-4 sm:px-6 lg:px-8 pt-4'>
       <Routes >
         <Route path='/login' element={<Login />} />
         <Route path='/' element={<ProtectedRoute><Home/></ProtectedRoute>} />

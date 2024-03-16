@@ -139,7 +139,7 @@ const EditUnit = () => {
             <BackButton destination='/units' />
             <h1 className='text 3xl my-4'>Edit Unit</h1>
             {loading ? <Spinner /> : ''}
-            <div className='flex flex-col w-[600px] p-4 mx-auto'>
+            <div className='flex flex-col p-4 mx-auto'>
                 <div className='my-4'>
                     <label className='text-xl mr-4 text-gray-500'>Name</label>
                     <input

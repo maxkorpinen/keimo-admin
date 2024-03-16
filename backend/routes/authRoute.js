@@ -8,9 +8,8 @@ const router = express.Router();
 
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
-
-    //console.log("Email:", email); // Check the received email
-    //console.log("Password:", password); // Check the received password
+    console.log("Email:", email); // Check the received email
+    console.log("Password:", password); // Check the received password
     // Adding a comment to test Github Actions
 
     try {

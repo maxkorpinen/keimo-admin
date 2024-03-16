@@ -41,7 +41,13 @@ unitSchema.pre('deleteOne', { document: false, query: true }, async function (ne
     // Remove the unit from all Civ documents
     await Civ.updateMany(
         {},
-        { $pull: { units: { unit: unitId } } }
+        { 
+            $pull: { 
+                'units.feudal': unitId,
+                'units.castle': unitId,
+                'units.imperial': unitId
+            } 
+        }
     );
     // Remove the unit from the counterOf and counteredBy arrays of all Unit documents
     await Unit.updateMany(

@@ -108,53 +108,36 @@ router.put('/:id', async (request, response) => {
         const addedCounteredBy = counteredBy.filter(x => !currentUnit.counteredBy.includes(x));
         const removedCounter = currentUnit.counteredBy.filter(x => !counteredBy.includes(x));
 
-        //console.log(addedCounterOf)
-        //console.log(removedCounterOf)
-        //console.log(addedCounteredBy)
-        //console.log(removedCounter)
-
-        const session = await mongoose.startSession();
-        session.startTransaction();
-        try {
-            // update the current unit
-            const result = await Unit.findByIdAndUpdate(id, request.body, { session })
-            if (!result) {
-                return response.status(400).json({ message: error.message })
-            }
-
-            // Update the counteredBy array of units added to counterOf
-            for (const counterUnitId of addedCounterOf) {
-                await Unit.findByIdAndUpdate(counterUnitId, { $addToSet: { counteredBy: id } }, { session });
-            }
-
-            // Update the counteredBy array of units removed from counterOf
-            for (const counterUnitId of removedCounterOf) {
-                await Unit.findByIdAndUpdate(counterUnitId, { $pull: { counteredBy: id } }, { session });
-            }
-
-            // Update the counterOf array of units added to counteredBy
-            for (const counterUnitId of addedCounteredBy) {
-                await Unit.findByIdAndUpdate(counterUnitId, { $addToSet: { counterOf: id } }, { session });
-            }
-
-            // Update the counterOf array of units removed from counteredBy
-            for (const counterUnitId of removedCounter) {
-                await Unit.findByIdAndUpdate(counterUnitId, { $pull: { counterOf: id } }, { session });
-            }
-
-            await session.commitTransaction();
-            return response.status(200).send({ message: 'Unit updated successfully' });
-        } catch (error) {
-            await session.abortTransaction();
-            console.log(error.message);
-            response.status(500).send({ message: error.message });
-        } finally {
-            session.endSession();
+        // update the current unit
+        const result = await Unit.findByIdAndUpdate(id, request.body)
+        if (!result) {
+            return response.status(400).json({ message: error.message })
         }
+
+        // Update the counteredBy array of units added to counterOf
+        for (const counterUnitId of addedCounterOf) {
+            await Unit.findByIdAndUpdate(counterUnitId, { $addToSet: { counteredBy: id } });
+        }
+
+        // Update the counteredBy array of units removed from counterOf
+        for (const counterUnitId of removedCounterOf) {
+            await Unit.findByIdAndUpdate(counterUnitId, { $pull: { counteredBy: id } });
+        }
+
+        // Update the counterOf array of units added to counteredBy
+        for (const counterUnitId of addedCounteredBy) {
+            await Unit.findByIdAndUpdate(counterUnitId, { $addToSet: { counterOf: id } });
+        }
+
+        // Update the counterOf array of units removed from counteredBy
+        for (const counterUnitId of removedCounter) {
+            await Unit.findByIdAndUpdate(counterUnitId, { $pull: { counterOf: id } });
+        }
+
+        return response.status(200).send({ message: 'Unit updated successfully' });
     } catch (error) {
         console.log(error.message);
         response.status(500).send({ message: error.message });
-
     }
 });
 
@@ -218,6 +201,7 @@ router.delete('/:id', async (request, response) => {
 
         return response.status(200).send({ message: 'Unit deleted successfully' })
     } catch (error) {
+        console.log('error when deleting unit')
         console.log(error.message);
         response.status(500).send({ message: error.message });
     }

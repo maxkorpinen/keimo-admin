@@ -14,16 +14,38 @@ const civSchema = mongoose.Schema(
             type: String,
             required: false
         },
-        units: [
-            {
-                unit: {
-                    type: mongoose.Schema.Types.ObjectId,
-                    ref: 'Unit'
-                },
-                powerModifier: Number,
-                _id: false
-            }
-        ]
+        units: {
+            feudal: [
+                {
+                    unit: {
+                        type: mongoose.Schema.Types.ObjectId,
+                        ref: 'Unit'
+                    },
+                    powerModifier: Number,
+                    _id: false
+                }
+            ],
+            castle: [
+                {
+                    unit: {
+                        type: mongoose.Schema.Types.ObjectId,
+                        ref: 'Unit'
+                    },
+                    powerModifier: Number,
+                    _id: false
+                }
+            ],
+            imperial: [
+                {
+                    unit: {
+                        type: mongoose.Schema.Types.ObjectId,
+                        ref: 'Unit'
+                    },
+                    powerModifier: Number,
+                    _id: false
+                }
+            ]
+        }
     },
     {
         timestamps: true,

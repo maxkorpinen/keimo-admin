@@ -16,10 +16,12 @@ router.post('/', async (request, response) => {
     try {
         if (
             !request.body.name ||
-            !request.body.units
+            !request.body.units.feudal ||
+            !request.body.units.castle ||
+            !request.body.units.imperial
         ) {
             return response.status(400).send({
-                message: 'Send all required fields: name, and units'
+                message: 'Send all required fields: name, and units for each age'
             });
         }
         const newCiv = {
@@ -79,10 +81,12 @@ router.put('/:id', async (request, response) => {
     try {
         if (
             !request.body.name ||
-            !request.body.units
+            !request.body.units.feudal ||
+            !request.body.units.castle ||
+            !request.body.units.imperial
         ) {
             return response.status(400).send({
-                message: 'Send all required fields: name, and units'
+                message: 'Send all required fields: name, and units for each age'
             });
         }
         const { id } = request.params;
